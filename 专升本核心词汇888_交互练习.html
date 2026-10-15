@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>专升本核心词汇888 · 交互练习</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='6' width='24' height='22' rx='3' fill='%231F4E79'/%3E%3Cpath d='M10 12h12M10 17h12M10 22h7' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --theme:#1F4E79; --assoc:#2E6DA4; --bg:#F2F6FA; --line:#D9E2EC;
+  --ink:#22262B; --sub:#5A6675; --ok:#1E8E5A; --err:#C0392B;
+  --card:#FFFFFF; --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif}
+button{font-family:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:14px 14px 40px}
+
+/* ---------- 顶栏 ---------- */
+.topbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;min-height:44px}
+.topbar .back{background:none;border:1px solid var(--line);border-radius:10px;width:44px;height:44px;font-size:18px;color:var(--theme);cursor:pointer;flex:0 0 44px}
+.topbar .bt{flex:1;min-width:0}
+.topbar h1{font-size:17px;color:var(--theme);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .sub{font-size:12px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- 首页 ---------- */
+.hero{padding:18px 4px 8px}
+.hero h1{font-size:24px;color:var(--theme);letter-spacing:.5px}
+.hero p{font-size:13px;color:var(--sub);margin-top:4px}
+.hint{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.hint span{font-size:12px;color:var(--sub);background:#fff;border:1px solid var(--line);padding:5px 10px;border-radius:20px}
+.units{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+@media (min-width:560px){.units{grid-template-columns:repeat(3,1fr)}}
+.u-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:13px 14px;cursor:pointer;display:block;text-align:left;width:100%;min-height:0}
+.u-card.wide{grid-column:1/-1}
+.u-card:active{transform:scale(.98)}
+.u-card .un{font-size:12px;color:var(--assoc);font-weight:600}
+.u-card .th{font-size:14px;color:var(--ink);margin-top:3px;line-height:1.4}
+.u-card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:var(--sub)}
+.u-card .pct{font-size:13px;font-weight:700;color:var(--theme)}
+.pbar{height:5px;background:#E4EBF2;border-radius:3px;margin-top:7px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--theme);border-radius:3px;width:0}
+.usage{font-size:11px;color:var(--sub);text-align:center;margin-top:20px;line-height:1.7}
+
+/* ---------- 题型导航 ---------- */
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 4px;font-size:12.5px;color:var(--sub);cursor:pointer;position:relative}
+.tab.on{background:var(--theme);border-color:var(--theme);color:#fff;font-weight:600}
+.tab .done{position:absolute;top:-6px;right:-4px;background:var(--ok);color:#fff;font-size:10px;border-radius:10px;padding:1px 6px;display:none}
+.tab .done.show{display:block}
+.prog{font-size:12px;color:var(--sub);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+
+/* ---------- 题卡 ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 16px;margin-bottom:12px}
+.q-word{font-size:30px;font-weight:700;color:var(--theme);letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.spk{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:2px solid var(--assoc);color:var(--assoc);background:#fff;border-radius:50%;cursor:pointer;flex:none;transition:.15s}
+.spk:active{transform:scale(.92);background:#E8F1FA}
+.spk svg{width:20px;height:20px}
+.q-meta{font-size:13px;color:var(--sub);margin-top:4px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:13px 14px;font-size:15px;cursor:pointer;text-align:left;min-height:50px;width:100%}
+.opt .tag{flex:0 0 26px;height:26px;border-radius:7px;background:var(--bg);color:var(--theme);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px}
+.opt.correct{background:#EAF6F0;border-color:var(--ok)}
+.opt.wrong{background:#FBEFED;border-color:var(--err)}
+.opt:disabled{cursor:default}
+.opt.done{opacity:.92}
+/* ---------- 题型1 导航（上一题/下一题） ---------- */
+.navrow{display:flex;gap:10px;margin-top:14px;max-width:420px;margin-left:auto;margin-right:auto}
+.navbtn{flex:1;min-height:46px;border:2px solid var(--assoc);background:#fff;color:var(--theme);border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:.15s}
+.navbtn:active{transform:scale(.97)}
+.navbtn.main{background:var(--theme);border-color:var(--theme);color:#fff}
+.navbtn:disabled{opacity:.38;cursor:not-allowed}
+
+/* ---------- 反馈条 ---------- */
+.fb{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:14px;line-height:1.6;display:none}
+.fb.show{display:block}
+.fb.ok{background:#EAF6F0;border:1px solid #BBDECB;color:#14532D}
+.fb.no{background:#FBEFED;border:1px solid #F0C4BE;color:#7B241C}
+.fb .big{font-weight:700}
+
+/* ---------- 输入（题型2） ---------- */
+.inrow{display:flex;gap:8px;margin-top:14px}
+.inrow input{flex:1;min-width:0;font-size:16px;padding:13px 12px;border:1.5px solid var(--line);border-radius:10px;outline:none;background:#fff}
+.inrow input:focus{border-color:var(--theme)}
+.btn{background:var(--theme);color:#fff;border:none;border-radius:10px;padding:0 20px;font-size:15px;font-weight:600;cursor:pointer;min-height:50px;white-space:nowrap}
+.btn.ghost{background:#fff;color:var(--theme);border:1.5px solid var(--theme)}
+.btn:disabled{opacity:.5;cursor:default}
+
+/* ---------- 题型3 ---------- */
+.pool{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.pool .chip{background:#fff;border:1.5px solid var(--assoc);color:var(--theme);border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer;min-height:42px;display:inline-flex;align-items:center}
+.pool .chip.used{opacity:.3;border-style:dashed;pointer-events:none}
+.sent{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:15px;line-height:1.8}
+.sent .slot{display:inline-block;min-width:96px;border-bottom:2px dashed var(--assoc);color:var(--assoc);font-weight:600;cursor:pointer;text-align:center;padding:2px 8px;border-radius:4px}
+.sent .slot.active{background:#E4EEF9;border-bottom-style:solid}
+.sent .slot.filled{color:var(--theme);border-bottom-style:solid}
+.sent .slot.good{color:var(--ok);border-color:var(--ok);background:#EAF6F0}
+.sent .slot.bad{color:var(--err);border-color:var(--err);background:#FBEFED}
+.sent .slot.edit{border-style:solid;background:#fff}
+.sent .ok-mark{color:var(--ok);font-weight:700;margin-left:4px}
+.sent .no-mark{color:var(--err);font-weight:700;margin-left:4px}
+.sin{width:104px;border:none;border-bottom:2px solid var(--theme);font-size:15px;font-family:inherit;color:var(--theme);outline:none;background:transparent;padding:2px 4px}
+.form-hint{font-size:12px;color:#B45309;font-weight:600}
+.t3score{font-size:14px;font-weight:700;color:var(--theme);text-align:center;margin:10px 0}
+
+/* ---------- 小结 / 总结 ---------- */
+.tally{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.tally .tt{font-size:15px;font-weight:700;color:var(--theme);margin-bottom:8px}
+.tally .row{display:flex;justify-content:space-between;font-size:14px;padding:5px 0;border-bottom:1px dashed #EDF1F5}
+.tally .row:last-child{border-bottom:none}
+.mask{position:fixed;inset:0;background:rgba(20,28,40,.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.mask.show{display:flex}
+.dialog{background:#fff;border-radius:14px;padding:22px 18px;width:100%;max-width:400px;max-height:86vh;overflow:auto}
+.dialog h2{font-size:18px;color:var(--theme);margin-bottom:12px}
+.dialog .row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px dashed #EDF1F5}
+.dialog .row:last-of-type{border-bottom:none}
+.dialog .big{font-size:20px;font-weight:700;color:var(--theme)}
+.dbtn{display:block;width:100%;margin-top:10px;padding:13px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;border:none}
+.dbtn.main{background:var(--theme);color:#fff}
+.dbtn.ghost{background:#fff;color:var(--theme);border:1.5px solid var(--theme)}
+
+/* ---------- 错词页 ---------- */
+.wlist{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px}
+.wlist .wt{font-size:15px;font-weight:700;color:var(--err);margin-bottom:10px}
+.wrow{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed #EDF1F5;font-size:14px;align-items:baseline}
+.wrow:last-child{border-bottom:none}
+.wrow .w{font-weight:700;color:var(--ink);min-width:0}
+.wrow .g{color:var(--sub);font-size:13px}
+.empty{color:var(--sub);font-size:14px;text-align:center;padding:20px 0}
+.note{font-size:12px;color:var(--sub);line-height:1.7}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 视图：首页 ===== -->
+  <div id="view-home">
+    <div class="hero">
+      <h1>专升本核心词汇888</h1>
+      <p>交互自测练习 · 进度自动保存在本机，下次打开接着练</p>
+      <div class="hint">
+        <span>题型1 英选中</span><span>题型2 中译英</span><span>题型3 选词填空</span>
+      </div>
+    </div>
+    <div class="units" id="unitList"></div>
+    <div class="usage">数据更新：在页面源码顶部 DATA 中增删单词与题目即可<br>页面可离线使用，无需联网</div>
+  </div>
+
+  <!-- ===== 视图：练习 ===== -->
+  <div id="view-practice" class="hide">
+    <div class="topbar">
+      <button class="back" id="btnBack" aria-label="返回">&#8592;</button>
+      <div class="bt">
+        <h1 id="pTitle">Unit 1</h1>
+        <div class="sub" id="pTheme"></div>
+      </div>
+    </div>
+    <div class="tabs" id="tabBar">
+      <button class="tab on" data-t="1">1 英选中<span class="done" id="d1">&#10003;</span></button>
+      <button class="tab" data-t="2">2 中译英<span class="done" id="d2">&#10003;</span></button>
+      <button class="tab" data-t="3">3 选词填空<span class="done" id="d3">&#10003;</span></button>
+    </div>
+    <div class="prog" id="progLine"></div>
+    <div id="stage"></div>
+  </div>
+
+  <!-- ===== 视图：错词回顾 ===== -->
+  <div id="view-review" class="hide">
+    <div class="topbar">
+      <button class="back" id="btnRBack" aria-label="返回">&#8592;</button>
+      <div class="bt"><h1 id="rTitle">错词回顾</h1><div class="sub">做错的词集中在这里，重刷做对后自动移出</div></div>
+    </div>
+    <div id="reviewBox"></div>
+  </div>
+
+  <!-- ===== 总结弹层 ===== -->
+  <div class="mask" id="maskSum">
+    <div class="dialog">
+      <h2 id="sumTitle">本单元总结</h2>
+      <div id="sumBody"></div>
+      <button class="dbtn main" id="btnRerunWrong">重刷错词</button>
+      <button class="dbtn ghost" id="btnSumHome">返回首页</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ================= 数据（可在此增删单元与单词） ================= */
+var DATA = [{"id": "u1", "name": "Unit 1", "theme": "核心高频动词与名词", "words": [{"w": "achieve", "ph": "/əˈtʃiːv/", "pos": "v.", "g": "实现；达到；取得"}, {"w": "benefit", "ph": "/ˈbenɪfɪt/", "pos": "n./v.", "g": "益处；使受益"}, {"w": "challenge", "ph": "/ˈtʃælɪndʒ/", "pos": "n./v.", "g": "挑战；向……挑战"}, {"w": "opportunity", "ph": "/ˌɒpəˈtjuːnəti/", "pos": "n.", "g": "机会；时机"}, {"w": "environment", "ph": "/ɪnˈvaɪrənmənt/", "pos": "n.", "g": "环境"}, {"w": "develop", "ph": "/dɪˈveləp/", "pos": "v.", "g": "发展；开发；培养"}, {"w": "responsible", "ph": "/rɪˈspɒnsəbl/", "pos": "adj.", "g": "负责的；有责任的"}, {"w": "participate", "ph": "/pɑːˈtɪsɪpeɪt/", "pos": "v.", "g": "参加；参与"}, {"w": "improve", "ph": "/ɪmˈpruːv/", "pos": "v.", "g": "改进；改善；提高"}, {"w": "attitude", "ph": "/ˈætɪtjuːd/", "pos": "n.", "g": "态度；看法"}, {"w": "effective", "ph": "/ɪˈfektɪv/", "pos": "adj.", "g": "有效的；生效的"}, {"w": "available", "ph": "/əˈveɪləbl/", "pos": "adj.", "g": "可获得的；可用的"}, {"w": "determine", "ph": "/dɪˈtɜːmɪn/", "pos": "v.", "g": "决定；确定；下决心"}, {"w": "maintain", "ph": "/meɪnˈteɪn/", "pos": "v.", "g": "维持；保持；保养"}, {"w": "significant", "ph": "/sɪɡˈnɪfɪkənt/", "pos": "adj.", "g": "重要的；显著的"}, {"w": "influence", "ph": "/ˈɪnfluəns/", "pos": "n./v.", "g": "影响"}, {"w": "individual", "ph": "/ˌɪndɪˈvɪdʒuəl/", "pos": "n./adj.", "g": "个人（的）"}, {"w": "acquire", "ph": "/əˈkwaɪə(r)/", "pos": "v.", "g": "获得；习得"}, {"w": "approach", "ph": "/əˈprəʊtʃ/", "pos": "n./v.", "g": "方法；接近"}, {"w": "concentrate", "ph": "/ˈkɒnsntreɪt/", "pos": "v.", "g": "集中；专心"}], "pc": {"ws": ["achieve", "acquire", "approach", "benefit", "challenge", "determine", "develop", "environment", "maintain", "opportunity"], "it": ["Everyone will ___ from the new teaching method.", "The new job is a big ___ to him.", "Don't miss the ___ to learn from the best teachers.", "We should protect the ___ from being polluted.", "Reading widely helps us ___ the ability to think independently.", "If you keep trying, you will ___ your goals one day.", "It is important to ___ a good balance between work and study.", "Your attitude ___ how far you can go.", "We need a new ___ to solving this problem.", "Children ___ language by listening and speaking."], "an": ["benefit", "challenge", "opportunity", "environment", "develop", "achieve", "maintain", "determines", "approach", "acquire"]}}, {"id": "u2", "name": "Unit 2", "theme": "高频动词（一）", "words": [{"w": "establish", "ph": "/ɪˈstæblɪʃ/", "pos": "v.", "g": "建立；确立"}, {"w": "require", "ph": "/rɪˈkwaɪə(r)/", "pos": "v.", "g": "需要；要求"}, {"w": "provide", "ph": "/prəˈvaɪd/", "pos": "v.", "g": "提供；供应"}, {"w": "reduce", "ph": "/rɪˈdjuːs/", "pos": "v.", "g": "减少；降低"}, {"w": "increase", "ph": "/ɪnˈkriːs/", "pos": "v./n.", "g": "增加；增长"}, {"w": "promote", "ph": "/prəˈməʊt/", "pos": "v.", "g": "促进；提升"}, {"w": "prevent", "ph": "/prɪˈvent/", "pos": "v.", "g": "阻止；预防"}, {"w": "perform", "ph": "/pəˈfɔːm/", "pos": "v.", "g": "执行；表演"}, {"w": "produce", "ph": "/prəˈdjuːs/", "pos": "v.", "g": "生产；产生"}, {"w": "raise", "ph": "/reɪz/", "pos": "v.", "g": "举起；提高；抚养"}, {"w": "support", "ph": "/səˈpɔːt/", "pos": "v./n.", "g": "支持"}, {"w": "suggest", "ph": "/səˈdʒest/", "pos": "v.", "g": "建议；暗示"}, {"w": "consider", "ph": "/kənˈsɪdə(r)/", "pos": "v.", "g": "考虑；认为"}, {"w": "expect", "ph": "/ɪkˈspekt/", "pos": "v.", "g": "期望；预料"}, {"w": "remain", "ph": "/rɪˈmeɪn/", "pos": "v.", "g": "保持；剩余"}, {"w": "occur", "ph": "/əˈkɜː(r)/", "pos": "v.", "g": "发生；出现"}, {"w": "manage", "ph": "/ˈmænɪdʒ/", "pos": "v.", "g": "管理；设法做到"}, {"w": "encourage", "ph": "/ɪnˈkʌrɪdʒ/", "pos": "v.", "g": "鼓励；激励"}, {"w": "involve", "ph": "/ɪnˈvɒlv/", "pos": "v.", "g": "涉及；包含"}, {"w": "describe", "ph": "/dɪˈskraɪb/", "pos": "v.", "g": "描述；描写"}], "pc": {"ws": ["provide", "reduce", "promote", "prevent", "perform", "support", "suggest", "manage", "encourage", "involve"], "it": ["Our school ___ free breakfast for students who get up early.", "We should ___ the use of plastic bags to protect the environment.", "Sports meetings ___ friendship among students.", "Washing hands can ___ us from catching a cold.", "The dancers ___ beautifully at the opening ceremony.", "A good friend will always ___ you when you are in trouble.", "The doctor ___ that we take more exercise.", "He ___ to finish the work in time though it was hard.", "My parents always ___ me to try new things.", "The job ___ a lot of communication with customers."], "an": ["provides", "reduce", "promote", "prevent", "performed", "support", "suggested", "managed", "encourage", "involves"]}}, {"id": "u3", "name": "Unit 3", "theme": "高频动词（二）", "words": [{"w": "afford", "ph": "/əˈfɔːd/", "pos": "v.", "g": "负担得起；买得起"}, {"w": "apologize", "ph": "/əˈpɒlədʒaɪz/", "pos": "v.", "g": "道歉"}, {"w": "attract", "ph": "/əˈtrækt/", "pos": "v.", "g": "吸引；引起"}, {"w": "behave", "ph": "/bɪˈheɪv/", "pos": "v.", "g": "表现；举止"}, {"w": "compare", "ph": "/kəmˈpeə(r)/", "pos": "v.", "g": "比较；对比"}, {"w": "complain", "ph": "/kəmˈpleɪn/", "pos": "v.", "g": "抱怨；投诉"}, {"w": "conclude", "ph": "/kənˈkluːd/", "pos": "v.", "g": "得出结论；结束"}, {"w": "confirm", "ph": "/kənˈfɜːm/", "pos": "v.", "g": "确认；证实"}, {"w": "consist", "ph": "/kənˈsɪst/", "pos": "v.", "g": "由……组成；在于"}, {"w": "contribute", "ph": "/kənˈtrɪbjuːt/", "pos": "v.", "g": "贡献；捐助；促成"}, {"w": "create", "ph": "/kriˈeɪt/", "pos": "v.", "g": "创造；创作"}, {"w": "deal", "ph": "/diːl/", "pos": "v./n.", "g": "处理；应付；交易"}, {"w": "depend", "ph": "/dɪˈpend/", "pos": "v.", "g": "依赖；取决于"}, {"w": "design", "ph": "/dɪˈzaɪn/", "pos": "v./n.", "g": "设计"}, {"w": "destroy", "ph": "/dɪˈstrɔɪ/", "pos": "v.", "g": "破坏；摧毁"}, {"w": "discover", "ph": "/dɪˈskʌvə(r)/", "pos": "v.", "g": "发现"}, {"w": "discuss", "ph": "/dɪˈskʌs/", "pos": "v.", "g": "讨论"}, {"w": "divide", "ph": "/dɪˈvaɪd/", "pos": "v.", "g": "划分；分开"}, {"w": "educate", "ph": "/ˈedʒukeɪt/", "pos": "v.", "g": "教育；培养"}, {"w": "equip", "ph": "/ɪˈkwɪp/", "pos": "v.", "g": "装备；配备"}], "pc": {"ws": ["attract", "behave", "compare", "contribute", "create", "depend", "discover", "discuss", "divide", "equip"], "it": ["The new playground ___ many children at weekends.", "Please ___ well when you visit the museum.", "Don't ___ yourself with others all the time.", "Everyone should ___ to keeping the classroom clean.", "The artist ___ many beautiful works during his life.", "Whether we can go on the trip ___ on the weather.", "Columbus ___ America in 1492.", "We will ___ the plan at tomorrow's meeting.", "The teacher ___ the students into two groups for the game.", "The new lab is ___ with the latest computers."], "an": ["attracts", "behave", "compare", "contribute", "created", "depends", "discovered", "discuss", "divided", "equipped"]}}, {"id": "u4", "name": "Unit 4", "theme": "高频动词（三）", "words": [{"w": "escape", "ph": "/ɪˈskeɪp/", "pos": "v./n.", "g": "逃跑；逃避"}, {"w": "examine", "ph": "/ɪɡˈzæmɪn/", "pos": "v.", "g": "检查；审查；考试"}, {"w": "exist", "ph": "/ɪɡˈzɪst/", "pos": "v.", "g": "存在；生存"}, {"w": "expand", "ph": "/ɪkˈspænd/", "pos": "v.", "g": "扩大；扩展"}, {"w": "explain", "ph": "/ɪkˈspleɪn/", "pos": "v.", "g": "解释；说明"}, {"w": "explore", "ph": "/ɪkˈsplɔː(r)/", "pos": "v.", "g": "探索；勘探"}, {"w": "express", "ph": "/ɪkˈspres/", "pos": "v.", "g": "表达；表示"}, {"w": "fail", "ph": "/feɪl/", "pos": "v.", "g": "失败；不及格"}, {"w": "focus", "ph": "/ˈfəʊkəs/", "pos": "v./n.", "g": "集中；焦点"}, {"w": "follow", "ph": "/ˈfɒləʊ/", "pos": "v.", "g": "跟随；遵循"}, {"w": "force", "ph": "/fɔːs/", "pos": "v./n.", "g": "强迫；力量"}, {"w": "gain", "ph": "/ɡeɪn/", "pos": "v./n.", "g": "获得；增加"}, {"w": "graduate", "ph": "/ˈɡrædʒuət/", "pos": "v./n.", "g": "毕业；毕业生"}, {"w": "ignore", "ph": "/ɪɡˈnɔː(r)/", "pos": "v.", "g": "忽视；不理会"}, {"w": "imagine", "ph": "/ɪˈmædʒɪn/", "pos": "v.", "g": "想象；设想"}, {"w": "insist", "ph": "/ɪnˈsɪst/", "pos": "v.", "g": "坚持；坚持认为"}, {"w": "intend", "ph": "/ɪnˈtend/", "pos": "v.", "g": "打算；意图"}, {"w": "introduce", "ph": "/ˌɪntrəˈdjuːs/", "pos": "v.", "g": "介绍；引进"}, {"w": "judge", "ph": "/dʒʌdʒ/", "pos": "v./n.", "g": "判断；法官"}, {"w": "lack", "ph": "/læk/", "pos": "v./n.", "g": "缺乏；不足"}], "pc": {"ws": ["explore", "express", "focus", "gain", "ignore", "imagine", "insist", "intend", "introduce", "lack"], "it": ["We should ___ more ways to improve our listening skills.", "It's important to ___ your thanks to those who help you.", "Please ___ your attention on the key points of the lesson.", "She ___ a lot of useful knowledge from the lecture.", "We should never ___ the rules of traffic.", "Can you ___ a life without the Internet?", "He ___ on finishing the task by himself.", "We ___ to hold a book fair next month.", "Let me ___ our new English teacher to you.", "The team failed because of a ___ of preparation."], "an": ["explore", "express", "focus", "gained", "ignore", "imagine", "insisted", "intend", "introduce", "lack"]}}, {"id": "u5", "name": "Unit 5", "theme": "高频动词（四）", "words": [{"w": "lead", "ph": "/liːd/", "pos": "v.", "g": "领导；引导；导致"}, {"w": "limit", "ph": "/ˈlɪmɪt/", "pos": "v./n.", "g": "限制；限度"}, {"w": "mention", "ph": "/ˈmenʃn/", "pos": "v.", "g": "提到；说起"}, {"w": "observe", "ph": "/əbˈzɜːv/", "pos": "v.", "g": "观察；遵守"}, {"w": "obtain", "ph": "/əbˈteɪn/", "pos": "v.", "g": "获得；得到"}, {"w": "overcome", "ph": "/ˌəʊvəˈkʌm/", "pos": "v.", "g": "克服；战胜"}, {"w": "owe", "ph": "/əʊ/", "pos": "v.", "g": "欠；归功于"}, {"w": "permit", "ph": "/pəˈmɪt/", "pos": "v.", "g": "允许；许可"}, {"w": "persuade", "ph": "/pəˈsweɪd/", "pos": "v.", "g": "说服；劝说"}, {"w": "possess", "ph": "/pəˈzes/", "pos": "v.", "g": "拥有；具有"}, {"w": "prefer", "ph": "/prɪˈfɜː(r)/", "pos": "v.", "g": "更喜欢；宁愿"}, {"w": "prepare", "ph": "/prɪˈpeə(r)/", "pos": "v.", "g": "准备；预备"}, {"w": "present", "ph": "/prɪˈzent/", "pos": "v.", "g": "呈现；赠送"}, {"w": "pretend", "ph": "/prɪˈtend/", "pos": "v.", "g": "假装；伪装"}, {"w": "protect", "ph": "/prəˈtekt/", "pos": "v.", "g": "保护；防护"}, {"w": "prove", "ph": "/pruːv/", "pos": "v.", "g": "证明；证实"}, {"w": "recognize", "ph": "/ˈrekəɡnaɪz/", "pos": "v.", "g": "认出；承认"}, {"w": "recover", "ph": "/rɪˈkʌvə(r)/", "pos": "v.", "g": "恢复；痊愈"}, {"w": "refer", "ph": "/rɪˈfɜː(r)/", "pos": "v.", "g": "提及；参考；查阅"}, {"w": "refuse", "ph": "/rɪˈfjuːz/", "pos": "v.", "g": "拒绝"}], "pc": {"ws": ["obtain", "overcome", "permit", "persuade", "prefer", "prepare", "prove", "recover", "refer", "refuse"], "it": ["You can ___ the application form from the office.", "She tried her best to ___ the difficulties in study.", "Students are not ___ to use phones in the exam.", "He ___ his friend to join the volunteer team.", "I ___ tea to coffee in the morning.", "The students are ___ for the English speech contest.", "The experiment ___ that the new method works well.", "It took him a month to ___ from the illness.", "The teacher told us to ___ to the dictionary when we meet new words.", "She ___ to accept the gift from the stranger."], "an": ["obtain", "overcome", "permitted", "persuaded", "prefer", "preparing", "proved", "recover", "refer", "refused"]}}, {"id": "u6", "name": "Unit 6", "theme": "高频动词（五）", "words": [{"w": "regard", "ph": "/rɪˈɡɑːd/", "pos": "v./n.", "g": "认为；看待；尊重"}, {"w": "relate", "ph": "/rɪˈleɪt/", "pos": "v.", "g": "相关；联系"}, {"w": "relax", "ph": "/rɪˈlæks/", "pos": "v.", "g": "放松；休息"}, {"w": "rely", "ph": "/rɪˈlaɪ/", "pos": "v.", "g": "依赖；依靠"}, {"w": "remove", "ph": "/rɪˈmuːv/", "pos": "v.", "g": "移除；去掉"}, {"w": "replace", "ph": "/rɪˈpleɪs/", "pos": "v.", "g": "取代；替换"}, {"w": "represent", "ph": "/ˌreprɪˈzent/", "pos": "v.", "g": "代表；象征"}, {"w": "request", "ph": "/rɪˈkwest/", "pos": "v./n.", "g": "请求；要求"}, {"w": "research", "ph": "/rɪˈsɜːtʃ/", "pos": "v./n.", "g": "研究"}, {"w": "resist", "ph": "/rɪˈzɪst/", "pos": "v.", "g": "抵抗；忍住"}, {"w": "respect", "ph": "/rɪˈspekt/", "pos": "v./n.", "g": "尊重"}, {"w": "respond", "ph": "/rɪˈspɒnd/", "pos": "v.", "g": "回应；反应"}, {"w": "result", "ph": "/rɪˈzʌlt/", "pos": "v./n.", "g": "导致；结果"}, {"w": "reveal", "ph": "/rɪˈviːl/", "pos": "v.", "g": "揭示；透露"}, {"w": "review", "ph": "/rɪˈvjuː/", "pos": "v./n.", "g": "复习；评论；回顾"}, {"w": "reward", "ph": "/rɪˈwɔːd/", "pos": "v./n.", "g": "奖赏；报酬"}, {"w": "risk", "ph": "/rɪsk/", "pos": "v./n.", "g": "冒险；风险"}, {"w": "satisfy", "ph": "/ˈsætɪsfaɪ/", "pos": "v.", "g": "使满意；满足"}, {"w": "serve", "ph": "/sɜːv/", "pos": "v.", "g": "服务；供应；服役"}, {"w": "settle", "ph": "/ˈsetl/", "pos": "v.", "g": "解决；定居"}], "pc": {"ws": ["relax", "rely", "replace", "represent", "request", "resist", "respond", "reveal", "reward", "satisfy"], "it": ["A hot bath can help you ___ after a tiring day.", "You can ___ on your notes when you review the lesson.", "Nothing can ___ the support of your family.", "Our monitor will ___ the class at the meeting.", "Visitors are ___ to follow the rules of the park.", "It is difficult to ___ the temptation of playing games.", "He didn't ___ to my message until the next day.", "The survey ___ that many students sleep less than eight hours.", "The school ___ the winners with new books.", "Nothing can ___ his desire for knowledge."], "an": ["relax", "rely", "replace", "represent", "requested", "resist", "respond", "revealed", "rewarded", "satisfy"]}}, {"id": "u7", "name": "Unit 7", "theme": "高频动词（六）", "words": [{"w": "share", "ph": "/ʃeə(r)/", "pos": "v./n.", "g": "分享；份额"}, {"w": "solve", "ph": "/sɒlv/", "pos": "v.", "g": "解决；解答"}, {"w": "spend", "ph": "/spend/", "pos": "v.", "g": "花费；度过"}, {"w": "state", "ph": "/steɪt/", "pos": "v./n.", "g": "陈述；状态；国家"}, {"w": "stress", "ph": "/stres/", "pos": "v./n.", "g": "强调；压力"}, {"w": "struggle", "ph": "/ˈstrʌɡl/", "pos": "v./n.", "g": "奋斗；挣扎"}, {"w": "succeed", "ph": "/səkˈsiːd/", "pos": "v.", "g": "成功；继承"}, {"w": "suffer", "ph": "/ˈsʌfə(r)/", "pos": "v.", "g": "遭受；受苦"}, {"w": "supply", "ph": "/səˈplaɪ/", "pos": "v./n.", "g": "供应；供给"}, {"w": "survive", "ph": "/səˈvaɪv/", "pos": "v.", "g": "幸存；存活"}, {"w": "tend", "ph": "/tend/", "pos": "v.", "g": "倾向；照料"}, {"w": "transform", "ph": "/trænsˈfɔːm/", "pos": "v.", "g": "转变；改造"}, {"w": "treat", "ph": "/triːt/", "pos": "v.", "g": "对待；治疗"}, {"w": "trust", "ph": "/trʌst/", "pos": "v./n.", "g": "信任"}, {"w": "understand", "ph": "/ˌʌndəˈstænd/", "pos": "v.", "g": "理解；明白"}, {"w": "unite", "ph": "/juˈnaɪt/", "pos": "v.", "g": "联合；团结"}, {"w": "value", "ph": "/ˈvæljuː/", "pos": "v./n.", "g": "重视；价值"}, {"w": "warn", "ph": "/wɔːn/", "pos": "v.", "g": "警告；告诫"}, {"w": "waste", "ph": "/weɪst/", "pos": "v./n.", "g": "浪费"}, {"w": "wonder", "ph": "/ˈwʌndə(r)/", "pos": "v./n.", "g": "想知道；惊奇"}], "pc": {"ws": ["solve", "spend", "struggle", "succeed", "suffer", "survive", "tend", "treat", "value", "wonder"], "it": ["We must find a way to ___ the housing problem.", "She ___ most of her free time reading novels.", "He ___ to understand the difficult text at first.", "If you keep working hard, you will ___ in the end.", "Many old people ___ from high blood pressure.", "Some plants can ___ in very dry areas.", "People ___ to remember what they are interested in.", "We should ___ every patient with care and patience.", "We should ___ the time we spend with our family.", "I ___ whether he can pass the exam this time."], "an": ["solve", "spends", "struggled", "succeed", "suffer", "survive", "tend", "treat", "value", "wonder"]}}, {"id": "u8", "name": "Unit 8", "theme": "高频动词（七）", "words": [{"w": "accomplish", "ph": "/əˈkʌmplɪʃ/", "pos": "v.", "g": "完成；实现"}, {"w": "adapt", "ph": "/əˈdæpt/", "pos": "v.", "g": "适应；改编"}, {"w": "admire", "ph": "/ədˈmaɪə(r)/", "pos": "v.", "g": "钦佩；欣赏"}, {"w": "admit", "ph": "/ədˈmɪt/", "pos": "v.", "g": "承认；准许进入"}, {"w": "adopt", "ph": "/əˈdɒpt/", "pos": "v.", "g": "采纳；收养"}, {"w": "affect", "ph": "/əˈfekt/", "pos": "v.", "g": "影响；感动"}, {"w": "announce", "ph": "/əˈnaʊns/", "pos": "v.", "g": "宣布；宣告"}, {"w": "appreciate", "ph": "/əˈpriːʃieɪt/", "pos": "v.", "g": "欣赏；感激"}, {"w": "approve", "ph": "/əˈpruːv/", "pos": "v.", "g": "批准；赞成"}, {"w": "argue", "ph": "/ˈɑːɡjuː/", "pos": "v.", "g": "争论；主张"}, {"w": "arrange", "ph": "/əˈreɪndʒ/", "pos": "v.", "g": "安排；整理"}, {"w": "assess", "ph": "/əˈses/", "pos": "v.", "g": "评估；评定"}, {"w": "assume", "ph": "/əˈsjuːm/", "pos": "v.", "g": "假定；承担"}, {"w": "attach", "ph": "/əˈtætʃ/", "pos": "v.", "g": "附上；使依恋"}, {"w": "attempt", "ph": "/əˈtempt/", "pos": "v./n.", "g": "尝试；企图"}, {"w": "attend", "ph": "/əˈtend/", "pos": "v.", "g": "出席；照料"}, {"w": "avoid", "ph": "/əˈvɔɪd/", "pos": "v.", "g": "避免；回避"}, {"w": "base", "ph": "/beɪs/", "pos": "v./n.", "g": "以……为基础；基础"}, {"w": "blame", "ph": "/bleɪm/", "pos": "v./n.", "g": "责备；归咎"}, {"w": "borrow", "ph": "/ˈbɒrəʊ/", "pos": "v.", "g": "借入；借用"}], "pc": {"ws": ["adapt", "admire", "affect", "appreciate", "approve", "arrange", "assess", "assume", "attempt", "avoid"], "it": ["It is not easy to ___ to a new environment quickly.", "I ___ the way she deals with problems calmly.", "Too much noise can ___ our sleep quality.", "I ___ your kindness in helping me with my study.", "The plan was ___ by the headmaster yesterday.", "Please ___ a time for us to discuss the project.", "Teachers ___ students' work from different aspects.", "We shouldn't ___ that he is wrong without evidence.", "He ___ to climb the mountain alone last year.", "You should ___ staying up too late before exams."], "an": ["adapt", "admire", "affect", "appreciate", "approved", "arrange", "assess", "assume", "attempted", "avoid"]}}, {"id": "u9", "name": "Unit 9", "theme": "高频动词（八）", "words": [{"w": "bother", "ph": "/ˈbɒðə(r)/", "pos": "v.", "g": "打扰；烦恼"}, {"w": "calculate", "ph": "/ˈkælkjuleɪt/", "pos": "v.", "g": "计算；估计"}, {"w": "cause", "ph": "/kɔːz/", "pos": "v./n.", "g": "引起；原因"}, {"w": "claim", "ph": "/kleɪm/", "pos": "v./n.", "g": "声称；索取；主张"}, {"w": "classify", "ph": "/ˈklæsɪfaɪ/", "pos": "v.", "g": "分类；归类"}, {"w": "combine", "ph": "/kəmˈbaɪn/", "pos": "v.", "g": "结合；联合"}, {"w": "command", "ph": "/kəˈmɑːnd/", "pos": "v./n.", "g": "命令；指挥"}, {"w": "comment", "ph": "/ˈkɒment/", "pos": "v./n.", "g": "评论"}, {"w": "commit", "ph": "/kəˈmɪt/", "pos": "v.", "g": "犯（错）；承诺；投入"}, {"w": "communicate", "ph": "/kəˈmjuːnɪkeɪt/", "pos": "v.", "g": "交流；沟通"}, {"w": "compete", "ph": "/kəmˈpiːt/", "pos": "v.", "g": "竞争；比赛"}, {"w": "complete", "ph": "/kəmˈpliːt/", "pos": "v./adj.", "g": "完成；完整的"}, {"w": "concern", "ph": "/kənˈsɜːn/", "pos": "v./n.", "g": "涉及；担忧；关心"}, {"w": "conduct", "ph": "/kənˈdʌkt/", "pos": "v./n.", "g": "进行；实施；行为"}, {"w": "connect", "ph": "/kəˈnekt/", "pos": "v.", "g": "连接；联系"}, {"w": "consume", "ph": "/kənˈsjuːm/", "pos": "v.", "g": "消耗；消费"}, {"w": "contain", "ph": "/kənˈteɪn/", "pos": "v.", "g": "包含；容纳"}, {"w": "continue", "ph": "/kənˈtɪnjuː/", "pos": "v.", "g": "继续；延续"}, {"w": "control", "ph": "/kənˈtrəʊl/", "pos": "v./n.", "g": "控制"}, {"w": "convince", "ph": "/kənˈvɪns/", "pos": "v.", "g": "使信服；说服"}], "pc": {"ws": ["calculate", "classify", "combine", "comment", "communicate", "compete", "complete", "concern", "connect", "convince"], "it": ["Please ___ the cost of the trip before we set off.", "The librarian ___ the new books by subject.", "The course ___ online learning with classroom teaching.", "He refused to ___ on the result of the game.", "It is easier to ___ with people who share your interests.", "Many students ___ for the chance to study abroad.", "She ___ the task ahead of the deadline.", "The safety of the children ___ all the parents.", "The subway ___ the city center with the airport.", "The teacher ___ us that practice makes perfect."], "an": ["calculate", "classifies", "combines", "comment", "communicate", "compete", "completed", "concerns", "connects", "convinced"]}}, {"id": "u10", "name": "Unit 10", "theme": "高频名词（一）", "words": [{"w": "ability", "ph": "/əˈbɪləti/", "pos": "n.", "g": "能力；才能"}, {"w": "advantage", "ph": "/ədˈvɑːntɪdʒ/", "pos": "n.", "g": "优势；有利条件"}, {"w": "advice", "ph": "/ədˈvaɪs/", "pos": "n.", "g": "建议；忠告"}, {"w": "agreement", "ph": "/əˈɡriːmənt/", "pos": "n.", "g": "协议；同意"}, {"w": "amount", "ph": "/əˈmaʊnt/", "pos": "n.", "g": "数量；金额"}, {"w": "attention", "ph": "/əˈtenʃn/", "pos": "n.", "g": "注意；关注"}, {"w": "balance", "ph": "/ˈbæləns/", "pos": "n./v.", "g": "平衡；余额"}, {"w": "behavior", "ph": "/bɪˈheɪvjə(r)/", "pos": "n.", "g": "行为；举止"}, {"w": "belief", "ph": "/bɪˈliːf/", "pos": "n.", "g": "信念；信仰"}, {"w": "choice", "ph": "/tʃɔɪs/", "pos": "n.", "g": "选择"}, {"w": "communication", "ph": "/kəˌmjuːnɪˈkeɪʃn/", "pos": "n.", "g": "交流；通信"}, {"w": "community", "ph": "/kəˈmjuːnəti/", "pos": "n.", "g": "社区；团体"}, {"w": "comparison", "ph": "/kəmˈpærɪsn/", "pos": "n.", "g": "比较；对比"}, {"w": "condition", "ph": "/kənˈdɪʃn/", "pos": "n.", "g": "条件；状况"}, {"w": "confidence", "ph": "/ˈkɒnfɪdəns/", "pos": "n.", "g": "信心；信任"}, {"w": "consequence", "ph": "/ˈkɒnsɪkwəns/", "pos": "n.", "g": "后果；结果"}, {"w": "consumer", "ph": "/kənˈsjuːmə(r)/", "pos": "n.", "g": "消费者"}, {"w": "contribution", "ph": "/ˌkɒntrɪˈbjuːʃn/", "pos": "n.", "g": "贡献；捐款"}, {"w": "culture", "ph": "/ˈkʌltʃə(r)/", "pos": "n.", "g": "文化"}, {"w": "decision", "ph": "/dɪˈsɪʒn/", "pos": "n.", "g": "决定；决心"}], "pc": {"ws": ["advantage", "amount", "attention", "balance", "choice", "condition", "confidence", "consequence", "contribution", "decision"], "it": ["Speaking two languages gives you an ___ in finding a job.", "A large ___ of water is wasted every day.", "You should pay more ___ to your handwriting.", "We need to keep a ___ between work and rest.", "It is hard to make a ___ between the two offers.", "The old machine is still in good ___ after years of use.", "Success builds ___ in learners.", "You must think about the ___ of your action.", "He made a great ___ to the development of the school.", "Taking a gap year is a personal ___ for everyone."], "an": ["advantage", "amount", "attention", "balance", "choice", "condition", "confidence", "consequences", "contribution", "decision"]}}, {"id": "u11", "name": "Unit 11", "theme": "高频名词（二）", "words": [{"w": "damage", "ph": "/ˈdæmɪdʒ/", "pos": "n./v.", "g": "损害；损失"}, {"w": "demand", "ph": "/dɪˈmɑːnd/", "pos": "n./v.", "g": "需求；要求"}, {"w": "description", "ph": "/dɪˈskrɪpʃn/", "pos": "n.", "g": "描述；说明"}, {"w": "difference", "ph": "/ˈdɪfrəns/", "pos": "n.", "g": "差异；区别"}, {"w": "difficulty", "ph": "/ˈdɪfɪkəlti/", "pos": "n.", "g": "困难；难题"}, {"w": "direction", "ph": "/dəˈrekʃn/", "pos": "n.", "g": "方向；指导"}, {"w": "disadvantage", "ph": "/ˌdɪsədˈvɑːntɪdʒ/", "pos": "n.", "g": "劣势；不利条件"}, {"w": "education", "ph": "/ˌedʒuˈkeɪʃn/", "pos": "n.", "g": "教育"}, {"w": "effect", "ph": "/ɪˈfekt/", "pos": "n.", "g": "效果；影响"}, {"w": "effort", "ph": "/ˈefət/", "pos": "n.", "g": "努力；尝试"}, {"w": "employee", "ph": "/ɪmˈplɔɪiː/", "pos": "n.", "g": "员工；雇员"}, {"w": "employer", "ph": "/ɪmˈplɔɪə(r)/", "pos": "n.", "g": "雇主；老板"}, {"w": "energy", "ph": "/ˈenədʒi/", "pos": "n.", "g": "能量；精力"}, {"w": "experience", "ph": "/ɪkˈspɪəriəns/", "pos": "n./v.", "g": "经验；经历"}, {"w": "fact", "ph": "/fækt/", "pos": "n.", "g": "事实"}, {"w": "factor", "ph": "/ˈfæktə(r)/", "pos": "n.", "g": "因素"}, {"w": "failure", "ph": "/ˈfeɪljə(r)/", "pos": "n.", "g": "失败"}, {"w": "feature", "ph": "/ˈfiːtʃə(r)/", "pos": "n.", "g": "特征；特色"}, {"w": "goal", "ph": "/ɡəʊl/", "pos": "n.", "g": "目标；球门"}, {"w": "growth", "ph": "/ɡrəʊθ/", "pos": "n.", "g": "增长；成长"}], "pc": {"ws": ["damage", "demand", "description", "difference", "direction", "effort", "experience", "factor", "feature", "growth"], "it": ["The storm ___ many houses along the coast.", "The ___ for online courses has increased a lot.", "Please give a brief ___ of the person you met.", "There is a big ___ between the two plans.", "He asked a stranger for ___ to the station.", "She made great ___ to improve her English.", "Working in the restaurant gave him valuable ___.", "Price is an important ___ when choosing a phone.", "The new phone has many interesting ___.", "The rapid ___ of the city brought both chances and problems."], "an": ["damaged", "demand", "description", "difference", "directions", "efforts", "experience", "factor", "features", "growth"]}}, {"id": "u12", "name": "Unit 12", "theme": "高频名词（三）", "words": [{"w": "habit", "ph": "/ˈhæbɪt/", "pos": "n.", "g": "习惯"}, {"w": "health", "ph": "/helθ/", "pos": "n.", "g": "健康"}, {"w": "idea", "ph": "/aɪˈdɪə/", "pos": "n.", "g": "想法；主意"}, {"w": "importance", "ph": "/ɪmˈpɔːtns/", "pos": "n.", "g": "重要性"}, {"w": "income", "ph": "/ˈɪnkʌm/", "pos": "n.", "g": "收入"}, {"w": "information", "ph": "/ˌɪnfəˈmeɪʃn/", "pos": "n.", "g": "信息；资料"}, {"w": "interest", "ph": "/ˈɪntrəst/", "pos": "n./v.", "g": "兴趣；利益；使感兴趣"}, {"w": "knowledge", "ph": "/ˈnɒlɪdʒ/", "pos": "n.", "g": "知识；学问"}, {"w": "language", "ph": "/ˈlæŋɡwɪdʒ/", "pos": "n.", "g": "语言"}, {"w": "level", "ph": "/ˈlevl/", "pos": "n.", "g": "水平；等级"}, {"w": "lifestyle", "ph": "/ˈlaɪfstaɪl/", "pos": "n.", "g": "生活方式"}, {"w": "member", "ph": "/ˈmembə(r)/", "pos": "n.", "g": "成员；会员"}, {"w": "memory", "ph": "/ˈmeməri/", "pos": "n.", "g": "记忆；回忆"}, {"w": "method", "ph": "/ˈmeθəd/", "pos": "n.", "g": "方法"}, {"w": "mind", "ph": "/maɪnd/", "pos": "n./v.", "g": "头脑；思想；介意"}, {"w": "mistake", "ph": "/mɪˈsteɪk/", "pos": "n./v.", "g": "错误；弄错"}, {"w": "nature", "ph": "/ˈneɪtʃə(r)/", "pos": "n.", "g": "自然；本质"}, {"w": "need", "ph": "/niːd/", "pos": "n./v.", "g": "需要"}, {"w": "object", "ph": "/ˈɒbdʒɪkt/", "pos": "n./v.", "g": "物体；目标；反对"}, {"w": "opinion", "ph": "/əˈpɪnjən/", "pos": "n.", "g": "意见；看法"}], "pc": {"ws": ["habit", "importance", "knowledge", "level", "memory", "method", "mistake", "nature", "opinion", "interest"], "it": ["Reading every day is a good ___ for students.", "The teacher stressed the ___ of listening carefully.", "Books are a rich source of ___.", "His English has reached a very high ___.", "The song brought back happy ___ of my childhood.", "The new teaching ___ works well in class.", "Everyone makes ___ sometimes; the key is to learn from them.", "It is human ___ to want to be accepted.", "In my ___, practice is more important than talent.", "She shows a strong ___ in science."], "an": ["habit", "importance", "knowledge", "level", "memories", "method", "mistakes", "nature", "opinion", "interest"]}}, {"id": "u13", "name": "Unit 13", "theme": "高频名词（四）", "words": [{"w": "organization", "ph": "/ˌɔːɡənaɪˈzeɪʃn/", "pos": "n.", "g": "组织；机构"}, {"w": "part", "ph": "/pɑːt/", "pos": "n.", "g": "部分；角色"}, {"w": "patient", "ph": "/ˈpeɪʃnt/", "pos": "n./adj.", "g": "病人；耐心的"}, {"w": "pattern", "ph": "/ˈpætn/", "pos": "n.", "g": "模式；图案"}, {"w": "percent", "ph": "/pəˈsent/", "pos": "n.", "g": "百分比"}, {"w": "performance", "ph": "/pəˈfɔːməns/", "pos": "n.", "g": "表现；表演；性能"}, {"w": "person", "ph": "/ˈpɜːsn/", "pos": "n.", "g": "人；个人"}, {"w": "pleasure", "ph": "/ˈpleʒə(r)/", "pos": "n.", "g": "快乐；愉快"}, {"w": "population", "ph": "/ˌpɒpjuˈleɪʃn/", "pos": "n.", "g": "人口"}, {"w": "position", "ph": "/pəˈzɪʃn/", "pos": "n.", "g": "位置；职位"}, {"w": "possibility", "ph": "/ˌpɒsəˈbɪləti/", "pos": "n.", "g": "可能性"}, {"w": "practice", "ph": "/ˈpræktɪs/", "pos": "n./v.", "g": "练习；实践"}, {"w": "pressure", "ph": "/ˈpreʃə(r)/", "pos": "n.", "g": "压力"}, {"w": "problem", "ph": "/ˈprɒbləm/", "pos": "n.", "g": "问题"}, {"w": "process", "ph": "/ˈprəʊses/", "pos": "n./v.", "g": "过程；处理"}, {"w": "product", "ph": "/ˈprɒdʌkt/", "pos": "n.", "g": "产品"}, {"w": "progress", "ph": "/ˈprəʊɡres/", "pos": "n./v.", "g": "进步；进展"}, {"w": "project", "ph": "/ˈprɒdʒekt/", "pos": "n./v.", "g": "项目；计划"}, {"w": "quality", "ph": "/ˈkwɒləti/", "pos": "n.", "g": "质量；品质"}, {"w": "reason", "ph": "/ˈriːzn/", "pos": "n./v.", "g": "原因；理由；推理"}], "pc": {"ws": ["performance", "pleasure", "population", "position", "pressure", "process", "progress", "quality", "reason", "organization"], "it": ["Her ___ at the concert impressed everyone.", "It is a great ___ to study with you.", "The city has a ___ of over two million.", "She applied for the ___ of sales manager.", "Many students feel ___ before the exam.", "Learning a language is a long ___.", "He has made great ___ in writing this term.", "The ___ of the product is very high.", "The main ___ for his success is hard work.", "The ___ held a meeting to discuss the plan."], "an": ["performance", "pleasure", "population", "position", "pressure", "process", "progress", "quality", "reason", "organization"]}}, {"id": "u14", "name": "Unit 14", "theme": "高频名词（五）", "words": [{"w": "relationship", "ph": "/rɪˈleɪʃnʃɪp/", "pos": "n.", "g": "关系；联系"}, {"w": "resource", "ph": "/rɪˈsɔːs/", "pos": "n.", "g": "资源"}, {"w": "role", "ph": "/rəʊl/", "pos": "n.", "g": "角色；作用"}, {"w": "safety", "ph": "/ˈseɪfti/", "pos": "n.", "g": "安全"}, {"w": "science", "ph": "/ˈsaɪəns/", "pos": "n.", "g": "科学"}, {"w": "sense", "ph": "/sens/", "pos": "n./v.", "g": "感觉；意义；意识到"}, {"w": "service", "ph": "/ˈsɜːvɪs/", "pos": "n./v.", "g": "服务"}, {"w": "situation", "ph": "/ˌsɪtʃuˈeɪʃn/", "pos": "n.", "g": "情况；局势"}, {"w": "skill", "ph": "/skɪl/", "pos": "n.", "g": "技能；技巧"}, {"w": "society", "ph": "/səˈsaɪəti/", "pos": "n.", "g": "社会"}, {"w": "solution", "ph": "/səˈluːʃn/", "pos": "n.", "g": "解决方案"}, {"w": "standard", "ph": "/ˈstændəd/", "pos": "n./adj.", "g": "标准；标准的"}, {"w": "subject", "ph": "/ˈsʌbdʒɪkt/", "pos": "n.", "g": "学科；主题；主语"}, {"w": "success", "ph": "/səkˈses/", "pos": "n.", "g": "成功"}, {"w": "system", "ph": "/ˈsɪstəm/", "pos": "n.", "g": "系统；体系"}, {"w": "task", "ph": "/tɑːsk/", "pos": "n.", "g": "任务"}, {"w": "technology", "ph": "/tekˈnɒlədʒi/", "pos": "n.", "g": "技术；科技"}, {"w": "theory", "ph": "/ˈθɪəri/", "pos": "n.", "g": "理论"}, {"w": "tradition", "ph": "/trəˈdɪʃn/", "pos": "n.", "g": "传统"}, {"w": "training", "ph": "/ˈtreɪnɪŋ/", "pos": "n.", "g": "训练；培训"}], "pc": {"ws": ["relationship", "role", "safety", "skill", "solution", "standard", "success", "system", "technology", "tradition"], "it": ["A good ___ with classmates helps you study better.", "Teachers play an important ___ in students' growth.", "We should always pay attention to road ___.", "Communication is a basic ___ for future work.", "We need to find a ___ to the traffic problem.", "The school sets a high ___ for its students.", "Hard work is the key to ___.", "The new ___ saves a lot of time.", "Modern ___ has changed the way we live.", "The festival is a long-standing ___ in China."], "an": ["relationship", "role", "safety", "skill", "solution", "standard", "success", "system", "technology", "tradition"]}}, {"id": "u15", "name": "Unit 15", "theme": "高频名词（六）", "words": [{"w": "trouble", "ph": "/ˈtrʌbl/", "pos": "n./v.", "g": "麻烦；烦恼"}, {"w": "truth", "ph": "/truːθ/", "pos": "n.", "g": "真相；事实"}, {"w": "type", "ph": "/taɪp/", "pos": "n./v.", "g": "类型；打字"}, {"w": "variety", "ph": "/vəˈraɪəti/", "pos": "n.", "g": "多样化；种类"}, {"w": "view", "ph": "/vjuː/", "pos": "n./v.", "g": "观点；视野；看待"}, {"w": "way", "ph": "/weɪ/", "pos": "n.", "g": "方法；道路"}, {"w": "wealth", "ph": "/welθ/", "pos": "n.", "g": "财富"}, {"w": "world", "ph": "/wɜːld/", "pos": "n.", "g": "世界"}, {"w": "achievement", "ph": "/əˈtʃiːvmənt/", "pos": "n.", "g": "成就；成绩"}, {"w": "action", "ph": "/ˈækʃn/", "pos": "n.", "g": "行动；行为"}, {"w": "activity", "ph": "/ækˈtɪvəti/", "pos": "n.", "g": "活动"}, {"w": "addition", "ph": "/əˈdɪʃn/", "pos": "n.", "g": "增加；加法"}, {"w": "atmosphere", "ph": "/ˈætməsfɪə(r)/", "pos": "n.", "g": "气氛；大气"}, {"w": "background", "ph": "/ˈbækɡraʊnd/", "pos": "n.", "g": "背景"}, {"w": "business", "ph": "/ˈbɪznəs/", "pos": "n.", "g": "生意；事务"}, {"w": "career", "ph": "/kəˈrɪə(r)/", "pos": "n.", "g": "职业；事业"}, {"w": "century", "ph": "/ˈsentʃəri/", "pos": "n.", "g": "世纪"}, {"w": "chance", "ph": "/tʃɑːns/", "pos": "n.", "g": "机会；可能性"}, {"w": "character", "ph": "/ˈkærəktə(r)/", "pos": "n.", "g": "性格；角色；字符"}, {"w": "company", "ph": "/ˈkʌmpəni/", "pos": "n.", "g": "公司；陪伴"}], "pc": {"ws": ["achievement", "activity", "atmosphere", "background", "career", "chance", "character", "truth", "view", "variety"], "it": ["Winning the prize is a great ___ for the team.", "The school organizes many outdoor ___ for students.", "The classroom has a warm and friendly ___.", "The movie is set against the ___ of the war.", "She is planning her ___ carefully after graduation.", "This is a good ___ for you to show your talent.", "His honest ___ makes him popular among friends.", "In the end, the ___ came out.", "From the top, you get a wonderful ___ of the city.", "The shop sells a ___ of fresh fruit."], "an": ["achievement", "activities", "atmosphere", "background", "career", "chance", "character", "truth", "view", "variety"]}}, {"id": "u16", "name": "Unit 16", "theme": "高频名词（七）", "words": [{"w": "competition", "ph": "/ˌkɒmpəˈtɪʃn/", "pos": "n.", "g": "竞争；比赛"}, {"w": "concept", "ph": "/ˈkɒnsept/", "pos": "n.", "g": "概念；观念"}, {"w": "conclusion", "ph": "/kənˈkluːʒn/", "pos": "n.", "g": "结论"}, {"w": "contact", "ph": "/ˈkɒntækt/", "pos": "n./v.", "g": "联系；接触"}, {"w": "course", "ph": "/kɔːs/", "pos": "n.", "g": "课程；过程；路线"}, {"w": "customer", "ph": "/ˈkʌstəmə(r)/", "pos": "n.", "g": "顾客；客户"}, {"w": "data", "ph": "/ˈdeɪtə/", "pos": "n.", "g": "数据"}, {"w": "degree", "ph": "/dɪˈɡriː/", "pos": "n.", "g": "程度；学位；度"}, {"w": "detail", "ph": "/ˈdiːteɪl/", "pos": "n./v.", "g": "细节；详述"}, {"w": "development", "ph": "/dɪˈveləpmənt/", "pos": "n.", "g": "发展；开发"}, {"w": "duty", "ph": "/ˈdjuːti/", "pos": "n.", "g": "责任；义务"}, {"w": "economy", "ph": "/ɪˈkɒnəmi/", "pos": "n.", "g": "经济"}, {"w": "example", "ph": "/ɪɡˈzɑːmpl/", "pos": "n.", "g": "例子；榜样"}, {"w": "exchange", "ph": "/ɪksˈtʃeɪndʒ/", "pos": "n./v.", "g": "交换；交流"}, {"w": "experiment", "ph": "/ɪkˈsperɪmənt/", "pos": "n./v.", "g": "实验"}, {"w": "expert", "ph": "/ˈekspɜːt/", "pos": "n./adj.", "g": "专家；熟练的"}, {"w": "expression", "ph": "/ɪkˈspreʃn/", "pos": "n.", "g": "表达；表情"}, {"w": "facility", "ph": "/fəˈsɪləti/", "pos": "n.", "g": "设施；设备"}, {"w": "form", "ph": "/fɔːm/", "pos": "n./v.", "g": "形式；形成"}, {"w": "freedom", "ph": "/ˈfriːdəm/", "pos": "n.", "g": "自由"}], "pc": {"ws": ["competition", "conclusion", "contact", "customer", "degree", "detail", "duty", "example", "exchange", "freedom"], "it": ["The ___ for the job was very fierce.", "The report came to the ___ that exercise helps sleep.", "Please keep in ___ with us after you leave.", "The shop treats every ___ with care.", "She got a ___ in computer science last year.", "He described the plan in great ___.", "It is our ___ to protect the environment.", "She is a good ___ for younger students.", "The two schools have a student ___ program.", "Children need some ___ to make their own choices."], "an": ["competition", "conclusion", "contact", "customer", "degree", "detail", "duty", "example", "exchange", "freedom"]}}, {"id": "u17", "name": "Unit 17", "theme": "高频名词（八）", "words": [{"w": "function", "ph": "/ˈfʌŋkʃn/", "pos": "n./v.", "g": "功能；函数；运转"}, {"w": "future", "ph": "/ˈfjuːtʃə(r)/", "pos": "n./adj.", "g": "未来；未来的"}, {"w": "generation", "ph": "/ˌdʒenəˈreɪʃn/", "pos": "n.", "g": "一代人；产生"}, {"w": "government", "ph": "/ˈɡʌvənmənt/", "pos": "n.", "g": "政府"}, {"w": "grade", "ph": "/ɡreɪd/", "pos": "n./v.", "g": "年级；成绩；评分"}, {"w": "group", "ph": "/ɡruːp/", "pos": "n.", "g": "组；团体"}, {"w": "history", "ph": "/ˈhɪstri/", "pos": "n.", "g": "历史"}, {"w": "honor", "ph": "/ˈɒnə(r)/", "pos": "n./v.", "g": "荣誉；尊敬"}, {"w": "human", "ph": "/ˈhjuːmən/", "pos": "n./adj.", "g": "人；人类的"}, {"w": "industry", "ph": "/ˈɪndəstri/", "pos": "n.", "g": "工业；行业"}, {"w": "instruction", "ph": "/ɪnˈstrʌkʃn/", "pos": "n.", "g": "指导；说明"}, {"w": "instrument", "ph": "/ˈɪnstrəmənt/", "pos": "n.", "g": "乐器；仪器"}, {"w": "interview", "ph": "/ˈɪntəvjuː/", "pos": "n./v.", "g": "面试；采访"}, {"w": "introduction", "ph": "/ˌɪntrəˈdʌkʃn/", "pos": "n.", "g": "介绍；引进"}, {"w": "issue", "ph": "/ˈɪʃuː/", "pos": "n./v.", "g": "问题；发行；发布"}, {"w": "item", "ph": "/ˈaɪtəm/", "pos": "n.", "g": "项目；物品"}, {"w": "job", "ph": "/dʒɒb/", "pos": "n.", "g": "工作；职业"}, {"w": "journey", "ph": "/ˈdʒɜːni/", "pos": "n.", "g": "旅行；旅程"}, {"w": "law", "ph": "/lɔː/", "pos": "n.", "g": "法律；法规"}, {"w": "measure", "ph": "/ˈmeʒə(r)/", "pos": "n./v.", "g": "措施；测量"}], "pc": {"ws": ["function", "generation", "grade", "honor", "industry", "instruction", "interview", "introduction", "issue", "journey"], "it": ["What is the ___ of this button?", "The older ___ grew up without the Internet.", "He got a good ___ in the math exam.", "It is an ___ to be invited to the ceremony.", "Tourism is an important ___ for the city.", "Please follow the ___ on the box.", "She prepared well for the job ___.", "The professor gave a brief ___ to the course.", "Environmental protection is a hot ___ these days.", "The ___ to the mountains took three hours."], "an": ["function", "generation", "grade", "honor", "industry", "instructions", "interview", "introduction", "issue", "journey"]}}, {"id": "u18", "name": "Unit 18", "theme": "高频形容词（一）", "words": [{"w": "able", "ph": "/ˈeɪbl/", "pos": "adj.", "g": "能够的；有能力的"}, {"w": "active", "ph": "/ˈæktɪv/", "pos": "adj.", "g": "积极的；活跃的"}, {"w": "actual", "ph": "/ˈæktʃuəl/", "pos": "adj.", "g": "实际的；真实的"}, {"w": "additional", "ph": "/əˈdɪʃənl/", "pos": "adj.", "g": "额外的；附加的"}, {"w": "advanced", "ph": "/ədˈvɑːnst/", "pos": "adj.", "g": "先进的；高级的"}, {"w": "afraid", "ph": "/əˈfreɪd/", "pos": "adj.", "g": "害怕的；担心的"}, {"w": "anxious", "ph": "/ˈæŋkʃəs/", "pos": "adj.", "g": "焦虑的；渴望的"}, {"w": "appropriate", "ph": "/əˈprəʊpriət/", "pos": "adj.", "g": "适当的；恰当的"}, {"w": "aware", "ph": "/əˈweə(r)/", "pos": "adj.", "g": "意识到的；知道的"}, {"w": "basic", "ph": "/ˈbeɪsɪk/", "pos": "adj.", "g": "基本的；基础的"}, {"w": "careful", "ph": "/ˈkeəfl/", "pos": "adj.", "g": "仔细的；小心的"}, {"w": "certain", "ph": "/ˈsɜːtn/", "pos": "adj.", "g": "确定的；某些"}, {"w": "common", "ph": "/ˈkɒmən/", "pos": "adj.", "g": "常见的；共同的"}, {"w": "confident", "ph": "/ˈkɒnfɪdənt/", "pos": "adj.", "g": "自信的；有信心的"}, {"w": "convenient", "ph": "/kənˈviːniənt/", "pos": "adj.", "g": "方便的"}, {"w": "curious", "ph": "/ˈkjʊəriəs/", "pos": "adj.", "g": "好奇的"}, {"w": "dangerous", "ph": "/ˈdeɪndʒərəs/", "pos": "adj.", "g": "危险的"}, {"w": "different", "ph": "/ˈdɪfrənt/", "pos": "adj.", "g": "不同的"}, {"w": "difficult", "ph": "/ˈdɪfɪkəlt/", "pos": "adj.", "g": "困难的"}, {"w": "eager", "ph": "/ˈiːɡə(r)/", "pos": "adj.", "g": "渴望的；热切的"}], "pc": {"ws": ["active", "anxious", "aware", "careful", "common", "confident", "convenient", "curious", "different", "eager"], "it": ["The young man is very ___ in class discussions.", "She felt ___ about the coming exam.", "We should be ___ of the dangers of smoking.", "Be ___ when you cross the road.", "This mistake is very ___ among beginners.", "Practice makes you more ___ in speaking.", "It is ___ to shop online at home.", "Children are ___ about everything around them.", "The two books are quite ___ in style.", "The students are ___ to learn new things."], "an": ["active", "anxious", "aware", "careful", "common", "confident", "convenient", "curious", "different", "eager"]}}, {"id": "u19", "name": "Unit 19", "theme": "高频形容词（二）", "words": [{"w": "easy", "ph": "/ˈiːzi/", "pos": "adj.", "g": "容易的；轻松的"}, {"w": "efficient", "ph": "/ɪˈfɪʃnt/", "pos": "adj.", "g": "高效的"}, {"w": "enough", "ph": "/ɪˈnʌf/", "pos": "adj./adv.", "g": "足够的；足够地"}, {"w": "essential", "ph": "/ɪˈsenʃl/", "pos": "adj.", "g": "必要的；本质的"}, {"w": "excellent", "ph": "/ˈeksələnt/", "pos": "adj.", "g": "极好的；优秀的"}, {"w": "familiar", "ph": "/fəˈmɪliə(r)/", "pos": "adj.", "g": "熟悉的"}, {"w": "famous", "ph": "/ˈfeɪməs/", "pos": "adj.", "g": "著名的"}, {"w": "final", "ph": "/ˈfaɪnl/", "pos": "adj./n.", "g": "最终的；决赛"}, {"w": "flexible", "ph": "/ˈfleksəbl/", "pos": "adj.", "g": "灵活的；柔韧的"}, {"w": "foreign", "ph": "/ˈfɒrən/", "pos": "adj.", "g": "外国的"}, {"w": "formal", "ph": "/ˈfɔːml/", "pos": "adj.", "g": "正式的；形式的"}, {"w": "former", "ph": "/ˈfɔːmə(r)/", "pos": "adj.", "g": "以前的；前者的"}, {"w": "free", "ph": "/friː/", "pos": "adj.", "g": "自由的；免费的"}, {"w": "friendly", "ph": "/ˈfrendli/", "pos": "adj.", "g": "友好的"}, {"w": "general", "ph": "/ˈdʒenrəl/", "pos": "adj.", "g": "一般的；总的"}, {"w": "glad", "ph": "/ɡlæd/", "pos": "adj.", "g": "高兴的；乐意的"}, {"w": "global", "ph": "/ˈɡləʊbl/", "pos": "adj.", "g": "全球的"}, {"w": "gradual", "ph": "/ˈɡrædʒuəl/", "pos": "adj.", "g": "逐渐的"}, {"w": "guilty", "ph": "/ˈɡɪlti/", "pos": "adj.", "g": "内疚的；有罪的"}, {"w": "hard", "ph": "/hɑːd/", "pos": "adj./adv.", "g": "困难的；努力地"}], "pc": {"ws": ["efficient", "essential", "familiar", "famous", "flexible", "formal", "free", "friendly", "general", "gradual"], "it": ["The new method is more ___ than the old one.", "Water is ___ for all living things.", "I am ___ with this kind of software.", "The town is ___ for its old buildings.", "My working hours are quite ___.", "You should wear ___ clothes to the meeting.", "The museum is ___ on weekends.", "The people in the village are very ___.", "The ___ idea of the article is about education.", "The weather is showing a ___ change."], "an": ["efficient", "essential", "familiar", "famous", "flexible", "formal", "free", "friendly", "general", "gradual"]}}, {"id": "u20", "name": "Unit 20", "theme": "高频形容词（三）", "words": [{"w": "harmful", "ph": "/ˈhɑːmfl/", "pos": "adj.", "g": "有害的"}, {"w": "healthy", "ph": "/ˈhelθi/", "pos": "adj.", "g": "健康的"}, {"w": "heavy", "ph": "/ˈhevi/", "pos": "adj.", "g": "重的；大量的"}, {"w": "helpful", "ph": "/ˈhelpfl/", "pos": "adj.", "g": "有帮助的"}, {"w": "honest", "ph": "/ˈɒnɪst/", "pos": "adj.", "g": "诚实的"}, {"w": "huge", "ph": "/hjuːdʒ/", "pos": "adj.", "g": "巨大的"}, {"w": "important", "ph": "/ɪmˈpɔːtnt/", "pos": "adj.", "g": "重要的"}, {"w": "impossible", "ph": "/ɪmˈpɒsəbl/", "pos": "adj.", "g": "不可能的"}, {"w": "independent", "ph": "/ˌɪndɪˈpendənt/", "pos": "adj.", "g": "独立的"}, {"w": "likely", "ph": "/ˈlaɪkli/", "pos": "adj.", "g": "可能的"}, {"w": "local", "ph": "/ˈləʊkl/", "pos": "adj.", "g": "当地的；本地的"}, {"w": "lonely", "ph": "/ˈləʊnli/", "pos": "adj.", "g": "孤独的"}, {"w": "lucky", "ph": "/ˈlʌki/", "pos": "adj.", "g": "幸运的"}, {"w": "major", "ph": "/ˈmeɪdʒə(r)/", "pos": "adj./n.", "g": "主要的；专业"}, {"w": "mental", "ph": "/ˈmentl/", "pos": "adj.", "g": "精神的；心理的"}, {"w": "modern", "ph": "/ˈmɒdn/", "pos": "adj.", "g": "现代的"}, {"w": "natural", "ph": "/ˈnætʃrəl/", "pos": "adj.", "g": "自然的"}, {"w": "necessary", "ph": "/ˈnesəsəri/", "pos": "adj.", "g": "必要的"}, {"w": "negative", "ph": "/ˈneɡətɪv/", "pos": "adj.", "g": "消极的；否定的"}, {"w": "normal", "ph": "/ˈnɔːml/", "pos": "adj.", "g": "正常的"}], "pc": {"ws": ["harmful", "healthy", "helpful", "honest", "important", "independent", "likely", "lonely", "necessary", "natural"], "it": ["Smoking is ___ to your health.", "Eating vegetables keeps you ___.", "The book is very ___ for beginners.", "An ___ person is always trusted by others.", "Sleep is ___ for memory.", "College life teaches students to be ___.", "It is ___ to rain this afternoon.", "He felt ___ when he first came to the city.", "It is ___ to review before the exam.", "It is ___ to make mistakes when learning."], "an": ["harmful", "healthy", "helpful", "honest", "important", "independent", "likely", "lonely", "necessary", "natural"]}}, {"id": "u21", "name": "Unit 21", "theme": "高频形容词（四）", "words": [{"w": "obvious", "ph": "/ˈɒbviəs/", "pos": "adj.", "g": "明显的；显然的"}, {"w": "particular", "ph": "/pəˈtɪkjələ(r)/", "pos": "adj.", "g": "特别的；特定的"}, {"w": "perfect", "ph": "/ˈpɜːfɪkt/", "pos": "adj.", "g": "完美的；极好的"}, {"w": "personal", "ph": "/ˈpɜːsənl/", "pos": "adj.", "g": "个人的；私人的"}, {"w": "physical", "ph": "/ˈfɪzɪkl/", "pos": "adj.", "g": "身体的；物理的"}, {"w": "pleasant", "ph": "/ˈpleznt/", "pos": "adj.", "g": "令人愉快的"}, {"w": "polite", "ph": "/pəˈlaɪt/", "pos": "adj.", "g": "有礼貌的"}, {"w": "popular", "ph": "/ˈpɒpjələ(r)/", "pos": "adj.", "g": "受欢迎的；流行的"}, {"w": "positive", "ph": "/ˈpɒzətɪv/", "pos": "adj.", "g": "积极的；肯定的"}, {"w": "possible", "ph": "/ˈpɒsəbl/", "pos": "adj.", "g": "可能的"}, {"w": "powerful", "ph": "/ˈpaʊəfl/", "pos": "adj.", "g": "强大的；有影响力的"}, {"w": "practical", "ph": "/ˈpræktɪkl/", "pos": "adj.", "g": "实用的；实际的"}, {"w": "precious", "ph": "/ˈpreʃəs/", "pos": "adj.", "g": "宝贵的；珍贵的"}, {"w": "previous", "ph": "/ˈpriːviəs/", "pos": "adj.", "g": "以前的；先前的"}, {"w": "primary", "ph": "/ˈpraɪməri/", "pos": "adj.", "g": "主要的；初级的"}, {"w": "private", "ph": "/ˈpraɪvət/", "pos": "adj.", "g": "私人的；私下的"}, {"w": "proper", "ph": "/ˈprɒpə(r)/", "pos": "adj.", "g": "适当的；正确的"}, {"w": "proud", "ph": "/praʊd/", "pos": "adj.", "g": "自豪的；骄傲的"}, {"w": "public", "ph": "/ˈpʌblɪk/", "pos": "adj./n.", "g": "公共的；公众"}, {"w": "rapid", "ph": "/ˈræpɪd/", "pos": "adj.", "g": "迅速的；快速的"}], "pc": {"ws": ["obvious", "personal", "pleasant", "polite", "positive", "practical", "precious", "private", "proud", "rapid"], "it": ["It is ___ that he has made great progress.", "Please don't ask about others' ___ matters.", "We had a ___ time at the beach.", "You should be ___ to the elderly.", "A ___ attitude helps you face difficulties.", "The course offers ___ skills for future jobs.", "Time is ___; don't waste it.", "This is my ___ information.", "We are ___ of our school.", "The city has seen ___ development in recent years."], "an": ["obvious", "personal", "pleasant", "polite", "positive", "practical", "precious", "private", "proud", "rapid"]}}, {"id": "u22", "name": "Unit 22", "theme": "高频形容词（五）", "words": [{"w": "rare", "ph": "/reə(r)/", "pos": "adj.", "g": "稀有的；罕见的"}, {"w": "ready", "ph": "/ˈredi/", "pos": "adj.", "g": "准备好的"}, {"w": "real", "ph": "/ˈrɪəl/", "pos": "adj.", "g": "真实的；真正的"}, {"w": "regular", "ph": "/ˈreɡjələ(r)/", "pos": "adj.", "g": "规律的；定期的"}, {"w": "relevant", "ph": "/ˈreləvənt/", "pos": "adj.", "g": "相关的；切题的"}, {"w": "reliable", "ph": "/rɪˈlaɪəbl/", "pos": "adj.", "g": "可靠的；可信赖的"}, {"w": "safe", "ph": "/seɪf/", "pos": "adj.", "g": "安全的"}, {"w": "scientific", "ph": "/ˌsaɪənˈtɪfɪk/", "pos": "adj.", "g": "科学的"}, {"w": "serious", "ph": "/ˈsɪəriəs/", "pos": "adj.", "g": "严肃的；严重的"}, {"w": "simple", "ph": "/ˈsɪmpl/", "pos": "adj.", "g": "简单的"}, {"w": "similar", "ph": "/ˈsɪmələ(r)/", "pos": "adj.", "g": "相似的"}, {"w": "single", "ph": "/ˈsɪŋɡl/", "pos": "adj.", "g": "单一的；单身的"}, {"w": "special", "ph": "/ˈspeʃl/", "pos": "adj.", "g": "特别的；专门的"}, {"w": "specific", "ph": "/spəˈsɪfɪk/", "pos": "adj.", "g": "具体的；特定的"}, {"w": "strong", "ph": "/strɒŋ/", "pos": "adj.", "g": "强壮的；强烈的"}, {"w": "sufficient", "ph": "/səˈfɪʃnt/", "pos": "adj.", "g": "充足的；足够的"}, {"w": "suitable", "ph": "/ˈsuːtəbl/", "pos": "adj.", "g": "适合的"}, {"w": "surprised", "ph": "/səˈpraɪzd/", "pos": "adj.", "g": "惊讶的"}, {"w": "various", "ph": "/ˈveəriəs/", "pos": "adj.", "g": "各种各样的"}, {"w": "weak", "ph": "/wiːk/", "pos": "adj.", "g": "虚弱的；弱的"}], "pc": {"ws": ["rare", "regular", "reliable", "serious", "similar", "special", "specific", "strong", "suitable", "various"], "it": ["Snow is ___ in this southern city.", "Take ___ exercise to stay healthy.", "He is a ___ friend you can depend on.", "Air pollution is a ___ problem here.", "The two answers are ___ in meaning.", "Today is a ___ day for our family.", "The teacher gave ___ instructions for the task.", "She has a ___ will to succeed.", "This job is ___ for people who love traveling.", "The store sells ___ kinds of tea."], "an": ["rare", "regular", "reliable", "serious", "similar", "special", "specific", "strong", "suitable", "various"]}}, {"id": "u23", "name": "Unit 23", "theme": "高频副词与其他词类（一）", "words": [{"w": "abroad", "ph": "/əˈbrɔːd/", "pos": "adv.", "g": "在国外；到国外"}, {"w": "again", "ph": "/əˈɡen/", "pos": "adv.", "g": "再一次；又"}, {"w": "already", "ph": "/ɔːlˈredi/", "pos": "adv.", "g": "已经"}, {"w": "also", "ph": "/ˈɔːlsəʊ/", "pos": "adv.", "g": "也；而且"}, {"w": "always", "ph": "/ˈɔːlweɪz/", "pos": "adv.", "g": "总是；一直"}, {"w": "almost", "ph": "/ˈɔːlməʊst/", "pos": "adv.", "g": "几乎；差不多"}, {"w": "alone", "ph": "/əˈləʊn/", "pos": "adv./adj.", "g": "独自地；单独的"}, {"w": "although", "ph": "/ɔːlˈðəʊ/", "pos": "conj.", "g": "虽然；尽管"}, {"w": "among", "ph": "/əˈmʌŋ/", "pos": "prep.", "g": "在……之中"}, {"w": "around", "ph": "/əˈraʊnd/", "pos": "adv./prep.", "g": "大约；周围；围绕"}, {"w": "because", "ph": "/bɪˈkɒz/", "pos": "conj.", "g": "因为"}, {"w": "before", "ph": "/bɪˈfɔː(r)/", "pos": "prep./conj.", "g": "在……之前"}, {"w": "behind", "ph": "/bɪˈhaɪnd/", "pos": "prep.", "g": "在……后面"}, {"w": "besides", "ph": "/bɪˈsaɪdz/", "pos": "prep./adv.", "g": "除……之外；此外"}, {"w": "between", "ph": "/bɪˈtwiːn/", "pos": "prep.", "g": "在……之间"}, {"w": "beyond", "ph": "/bɪˈjɒnd/", "pos": "prep.", "g": "超出；越过"}, {"w": "both", "ph": "/bəʊθ/", "pos": "pron./adj.", "g": "两者都"}, {"w": "carefully", "ph": "/ˈkeəfəli/", "pos": "adv.", "g": "仔细地；小心地"}, {"w": "certainly", "ph": "/ˈsɜːtnli/", "pos": "adv.", "g": "当然；必定"}, {"w": "commonly", "ph": "/ˈkɒmənli/", "pos": "adv.", "g": "通常；普遍地"}], "pc": {"ws": ["abroad", "already", "alone", "although", "among", "because", "before", "besides", "beyond", "carefully"], "it": ["She wants to study ___ after graduation.", "The train has ___ left.", "He prefers to study ___.", "___ it rained, we went on with the game.", "He is the tallest ___ the three boys.", "She stayed home ___ she was ill.", "Wash your hands ___ dinner.", "___ English, she can speak French.", "The village is ___ the mountain.", "Please read the questions ___ before answering."], "an": ["abroad", "already", "alone", "Although", "among", "because", "before", "Besides", "beyond", "carefully"]}}, {"id": "u24", "name": "Unit 24", "theme": "高频副词与其他词类（二）", "words": [{"w": "completely", "ph": "/kəmˈpliːtli/", "pos": "adv.", "g": "完全地"}, {"w": "constantly", "ph": "/ˈkɒnstəntli/", "pos": "adv.", "g": "不断地；经常地"}, {"w": "directly", "ph": "/dəˈrektli/", "pos": "adv.", "g": "直接地"}, {"w": "easily", "ph": "/ˈiːzəli/", "pos": "adv.", "g": "容易地"}, {"w": "especially", "ph": "/ɪˈspeʃəli/", "pos": "adv.", "g": "尤其；特别"}, {"w": "eventually", "ph": "/ɪˈventʃuəli/", "pos": "adv.", "g": "最终；终于"}, {"w": "exactly", "ph": "/ɪɡˈzæktli/", "pos": "adv.", "g": "确切地；正好"}, {"w": "finally", "ph": "/ˈfaɪnəli/", "pos": "adv.", "g": "最后；终于"}, {"w": "frequently", "ph": "/ˈfriːkwəntli/", "pos": "adv.", "g": "频繁地"}, {"w": "further", "ph": "/ˈfɜːðə(r)/", "pos": "adv./adj.", "g": "进一步地；更远的"}, {"w": "generally", "ph": "/ˈdʒenrəli/", "pos": "adv.", "g": "通常；普遍地"}, {"w": "however", "ph": "/haʊˈevə(r)/", "pos": "adv.", "g": "然而；可是"}, {"w": "immediately", "ph": "/ɪˈmiːdiətli/", "pos": "adv.", "g": "立即；马上"}, {"w": "indeed", "ph": "/ɪnˈdiːd/", "pos": "adv.", "g": "确实；的确"}, {"w": "instead", "ph": "/ɪnˈsted/", "pos": "adv.", "g": "代替；反而"}, {"w": "mainly", "ph": "/ˈmeɪnli/", "pos": "adv.", "g": "主要地"}, {"w": "maybe", "ph": "/ˈmeɪbi/", "pos": "adv.", "g": "也许；可能"}, {"w": "meanwhile", "ph": "/ˈmiːnwaɪl/", "pos": "adv.", "g": "与此同时"}, {"w": "moreover", "ph": "/mɔːrˈəʊvə(r)/", "pos": "adv.", "g": "此外；而且"}, {"w": "nearly", "ph": "/ˈnɪəli/", "pos": "adv.", "g": "几乎；将近"}], "pc": {"ws": ["completely", "especially", "eventually", "exactly", "finally", "frequently", "generally", "immediately", "instead", "meanwhile"], "it": ["I ___ agree with your opinion.", "I like fruit, ___ apples in autumn.", "After many tries, he ___ succeeded.", "Tell me ___ what happened.", "___ the exam was over.", "He ___ visits his grandparents.", "___ speaking, students like the new library.", "Please come here ___.", "She didn't go out; she stayed home ___.", "She cooked dinner; ___, the kids did homework."], "an": ["completely", "especially", "eventually", "exactly", "Finally", "frequently", "Generally", "immediately", "instead", "meanwhile"]}}, {"id": "u25", "name": "Unit 25", "theme": "高频副词与其他词类（三）", "words": [{"w": "never", "ph": "/ˈnevə(r)/", "pos": "adv.", "g": "从不；决不"}, {"w": "nevertheless", "ph": "/ˌnevəðəˈles/", "pos": "adv.", "g": "然而；不过"}, {"w": "often", "ph": "/ˈɒfn/", "pos": "adv.", "g": "经常"}, {"w": "once", "ph": "/wʌns/", "pos": "adv./conj.", "g": "曾经；一次；一旦"}, {"w": "perhaps", "ph": "/pəˈhæps/", "pos": "adv.", "g": "也许；可能"}, {"w": "possibly", "ph": "/ˈpɒsəbli/", "pos": "adv.", "g": "可能地"}, {"w": "probably", "ph": "/ˈprɒbəbli/", "pos": "adv.", "g": "大概；很可能"}, {"w": "quickly", "ph": "/ˈkwɪkli/", "pos": "adv.", "g": "快速地"}, {"w": "rarely", "ph": "/ˈreəli/", "pos": "adv.", "g": "很少；难得"}, {"w": "recently", "ph": "/ˈriːsntli/", "pos": "adv.", "g": "最近"}, {"w": "regularly", "ph": "/ˈreɡjələli/", "pos": "adv.", "g": "有规律地"}, {"w": "simply", "ph": "/ˈsɪmpli/", "pos": "adv.", "g": "简单地；仅仅"}, {"w": "slowly", "ph": "/ˈsləʊli/", "pos": "adv.", "g": "缓慢地"}, {"w": "sometimes", "ph": "/ˈsʌmtaɪmz/", "pos": "adv.", "g": "有时"}, {"w": "soon", "ph": "/suːn/", "pos": "adv.", "g": "不久；很快"}, {"w": "still", "ph": "/stɪl/", "pos": "adv.", "g": "仍然；还"}, {"w": "suddenly", "ph": "/ˈsʌdənli/", "pos": "adv.", "g": "突然"}, {"w": "together", "ph": "/təˈɡeðə(r)/", "pos": "adv.", "g": "一起；共同"}, {"w": "truly", "ph": "/ˈtruːli/", "pos": "adv.", "g": "真正地；确实地"}, {"w": "usually", "ph": "/ˈjuːʒuəli/", "pos": "adv.", "g": "通常"}], "pc": {"ws": ["never", "often", "once", "perhaps", "probably", "quickly", "recently", "suddenly", "together", "usually"], "it": ["He ___ gives up when facing difficulties.", "How ___ do you exercise?", "___ you start, you should finish it.", "___ he will change his mind.", "It will ___ rain tomorrow.", "She finished the work ___.", "I have been busy ___ with the project.", "The lights went out ___.", "We should work ___ to finish the task.", "He ___ gets up at seven."], "an": ["never", "often", "Once", "Perhaps", "probably", "quickly", "recently", "suddenly", "together", "usually"]}}, {"id": "u26", "name": "Unit 26", "theme": "高频其他词类（介词·连词·代词）", "words": [{"w": "across", "ph": "/əˈkrɒs/", "pos": "prep.", "g": "穿过；横过"}, {"w": "against", "ph": "/əˈɡenst/", "pos": "prep.", "g": "反对；倚靠"}, {"w": "along", "ph": "/əˈlɒŋ/", "pos": "prep.", "g": "沿着"}, {"w": "as", "ph": "/æz/", "pos": "prep./conj.", "g": "作为；如同；因为"}, {"w": "despite", "ph": "/dɪˈspaɪt/", "pos": "prep.", "g": "尽管；不管"}, {"w": "during", "ph": "/ˈdjʊərɪŋ/", "pos": "prep.", "g": "在……期间"}, {"w": "except", "ph": "/ɪkˈsept/", "pos": "prep.", "g": "除……之外"}, {"w": "including", "ph": "/ɪnˈkluːdɪŋ/", "pos": "prep.", "g": "包括"}, {"w": "inside", "ph": "/ˌɪnˈsaɪd/", "pos": "prep./adv.", "g": "在……里面；在里面"}, {"w": "since", "ph": "/sɪns/", "pos": "conj./prep.", "g": "自从；因为；既然"}, {"w": "through", "ph": "/θruː/", "pos": "prep.", "g": "通过；穿过"}, {"w": "throughout", "ph": "/θruːˈaʊt/", "pos": "prep.", "g": "遍及；贯穿"}, {"w": "towards", "ph": "/təˈwɔːdz/", "pos": "prep.", "g": "朝；向；对于"}, {"w": "unless", "ph": "/ənˈles/", "pos": "conj.", "g": "除非"}, {"w": "until", "ph": "/ənˈtɪl/", "pos": "prep./conj.", "g": "直到……为止"}, {"w": "whether", "ph": "/ˈweðə(r)/", "pos": "conj.", "g": "是否"}, {"w": "while", "ph": "/waɪl/", "pos": "conj.", "g": "当……时；然而"}, {"w": "neither", "ph": "/ˈnaɪðə(r)/", "pos": "pron./adj.", "g": "两者都不"}, {"w": "either", "ph": "/ˈaɪðə(r)/", "pos": "pron./conj.", "g": "两者之一；或者"}, {"w": "none", "ph": "/nʌn/", "pos": "pron.", "g": "没有人；没有任何东西"}], "pc": {"ws": ["across", "against", "despite", "during", "including", "through", "towards", "unless", "whether", "while"], "it": ["The old bridge ___ the river is very famous.", "We should protect the environment ___ pollution.", "___ the rain, the match continued.", "Don't talk ___ the lecture.", "There are twenty students, ___ me.", "The road runs ___ the forest.", "He walked ___ the door.", "You will fail ___ you work hard.", "I don't know ___ he will come.", "___ I was reading, the phone rang."], "an": ["across", "against", "Despite", "during", "including", "through", "towards", "unless", "whether", "While"]}}, {"id": "u27", "name": "Unit 27", "theme": "主题词：教育与学习（一）", "words": [{"w": "assignment", "ph": "/əˈsaɪnmənt/", "pos": "n.", "g": "作业；任务"}, {"w": "campus", "ph": "/ˈkæmpəs/", "pos": "n.", "g": "校园"}, {"w": "college", "ph": "/ˈkɒlɪdʒ/", "pos": "n.", "g": "学院；大学"}, {"w": "composition", "ph": "/ˌkɒmpəˈzɪʃn/", "pos": "n.", "g": "作文；组成"}, {"w": "comprehension", "ph": "/ˌkɒmprɪˈhenʃn/", "pos": "n.", "g": "理解力；阅读理解"}, {"w": "curriculum", "ph": "/kəˈrɪkjələm/", "pos": "n.", "g": "课程；课程体系"}, {"w": "dictionary", "ph": "/ˈdɪkʃənri/", "pos": "n.", "g": "词典"}, {"w": "diploma", "ph": "/dɪˈpləʊmə/", "pos": "n.", "g": "文凭；毕业证书"}, {"w": "discipline", "ph": "/ˈdɪsəplɪn/", "pos": "n.", "g": "纪律；学科"}, {"w": "exam", "ph": "/ɪɡˈzæm/", "pos": "n.", "g": "考试"}, {"w": "grammar", "ph": "/ˈɡræmə(r)/", "pos": "n.", "g": "语法"}, {"w": "homework", "ph": "/ˈhəʊmwɜːk/", "pos": "n.", "g": "家庭作业"}, {"w": "lecture", "ph": "/ˈlektʃə(r)/", "pos": "n./v.", "g": "讲座；讲课"}, {"w": "library", "ph": "/ˈlaɪbrəri/", "pos": "n.", "g": "图书馆"}, {"w": "mathematics", "ph": "/ˌmæθəˈmætɪks/", "pos": "n.", "g": "数学"}, {"w": "notebook", "ph": "/ˈnəʊtbʊk/", "pos": "n.", "g": "笔记本"}, {"w": "professor", "ph": "/prəˈfesə(r)/", "pos": "n.", "g": "教授"}, {"w": "pupil", "ph": "/ˈpjuːpl/", "pos": "n.", "g": "小学生；瞳孔"}, {"w": "scholarship", "ph": "/ˈskɒləʃɪp/", "pos": "n.", "g": "奖学金"}, {"w": "semester", "ph": "/sɪˈmestə(r)/", "pos": "n.", "g": "学期"}], "pc": {"ws": ["assignment", "campus", "curriculum", "discipline", "exam", "lecture", "library", "scholarship", "semester", "composition"], "it": ["The teacher gave us a lot of ___ last week.", "The ___ is beautiful in spring.", "The school has a rich ___.", "Good ___ is important for study.", "She is preparing for the final ___.", "We attended a ___ on modern art.", "He spends hours in the ___ every day.", "She won a ___ to study abroad.", "There are two ___ in a school year.", "The teacher asked us to write a ___ about our hometown."], "an": ["assignments", "campus", "curriculum", "discipline", "exam", "lecture", "library", "scholarship", "semesters", "composition"]}}, {"id": "u28", "name": "Unit 28", "theme": "主题词：教育与学习（二）", "words": [{"w": "lesson", "ph": "/ˈlesn/", "pos": "n.", "g": "课程；教训"}, {"w": "literature", "ph": "/ˈlɪtrətʃə(r)/", "pos": "n.", "g": "文学；文献"}, {"w": "mark", "ph": "/mɑːk/", "pos": "n./v.", "g": "分数；标记；打分"}, {"w": "paragraph", "ph": "/ˈpærəɡrɑːf/", "pos": "n.", "g": "段落"}, {"w": "phrase", "ph": "/freɪz/", "pos": "n.", "g": "短语；词组"}, {"w": "platform", "ph": "/ˈplætfɔːm/", "pos": "n.", "g": "平台；站台"}, {"w": "quiz", "ph": "/kwɪz/", "pos": "n.", "g": "测验；小考"}, {"w": "recite", "ph": "/rɪˈsaɪt/", "pos": "v.", "g": "背诵；朗诵"}, {"w": "schedule", "ph": "/ˈʃedjuːl/", "pos": "n./v.", "g": "时间表；安排"}, {"w": "seminar", "ph": "/ˈsemɪnɑː(r)/", "pos": "n.", "g": "研讨会"}, {"w": "spelling", "ph": "/ˈspelɪŋ/", "pos": "n.", "g": "拼写"}, {"w": "statement", "ph": "/ˈsteɪtmənt/", "pos": "n.", "g": "陈述；声明"}, {"w": "summary", "ph": "/ˈsʌməri/", "pos": "n.", "g": "总结；摘要"}, {"w": "textbook", "ph": "/ˈtekstbʊk/", "pos": "n.", "g": "教科书"}, {"w": "thesis", "ph": "/ˈθiːsɪs/", "pos": "n.", "g": "论文；论点"}, {"w": "tutor", "ph": "/ˈtjuːtə(r)/", "pos": "n.", "g": "导师；家教"}, {"w": "vocabulary", "ph": "/vəˈkæbjələri/", "pos": "n.", "g": "词汇；词汇量"}, {"w": "classmate", "ph": "/ˈklɑːsmeɪt/", "pos": "n.", "g": "同学"}, {"w": "wisdom", "ph": "/ˈwɪzdəm/", "pos": "n.", "g": "智慧"}, {"w": "academic", "ph": "/ˌækəˈdemɪk/", "pos": "adj.", "g": "学术的"}], "pc": {"ws": ["lesson", "mark", "paragraph", "phrase", "recite", "schedule", "summary", "textbook", "tutor", "vocabulary"], "it": ["The accident taught us a good ___.", "The teacher gave me a high ___ for the essay.", "Write a short ___ about your hobby.", "\"Look forward to\" is a useful ___.", "The students can ___ the poem by heart.", "We need to make a study ___ for the holiday.", "Please write a ___ of the article.", "Open your ___ to page ten.", "He hired a ___ to help with math.", "Reading widely can enlarge your ___."], "an": ["lesson", "mark", "paragraph", "phrase", "recite", "schedule", "summary", "textbook", "tutor", "vocabulary"]}}, {"id": "u29", "name": "Unit 29", "theme": "主题词：科技与互联网（一）", "words": [{"w": "computer", "ph": "/kəmˈpjuːtə(r)/", "pos": "n.", "g": "电脑；计算机"}, {"w": "digital", "ph": "/ˈdɪdʒɪtl/", "pos": "adj.", "g": "数字的；数码的"}, {"w": "download", "ph": "/ˌdaʊnˈləʊd/", "pos": "v./n.", "g": "下载"}, {"w": "electronic", "ph": "/ɪˌlekˈtrɒnɪk/", "pos": "adj.", "g": "电子的"}, {"w": "engineer", "ph": "/ˌendʒɪˈnɪə(r)/", "pos": "n.", "g": "工程师"}, {"w": "equipment", "ph": "/ɪˈkwɪpmənt/", "pos": "n.", "g": "设备；装备"}, {"w": "file", "ph": "/faɪl/", "pos": "n./v.", "g": "文件；档案；归档"}, {"w": "internet", "ph": "/ˈɪntənet/", "pos": "n.", "g": "互联网"}, {"w": "keyboard", "ph": "/ˈkiːbɔːd/", "pos": "n.", "g": "键盘"}, {"w": "machine", "ph": "/məˈʃiːn/", "pos": "n.", "g": "机器"}, {"w": "network", "ph": "/ˈnetwɜːk/", "pos": "n.", "g": "网络"}, {"w": "online", "ph": "/ˌɒnˈlaɪn/", "pos": "adj./adv.", "g": "在线的；在线"}, {"w": "program", "ph": "/ˈprəʊɡræm/", "pos": "n./v.", "g": "程序；节目；编程"}, {"w": "robot", "ph": "/ˈrəʊbɒt/", "pos": "n.", "g": "机器人"}, {"w": "screen", "ph": "/skriːn/", "pos": "n.", "g": "屏幕"}, {"w": "software", "ph": "/ˈsɒftweə(r)/", "pos": "n.", "g": "软件"}, {"w": "website", "ph": "/ˈwebsaɪt/", "pos": "n.", "g": "网站"}, {"w": "device", "ph": "/dɪˈvaɪs/", "pos": "n.", "g": "设备；装置"}, {"w": "invention", "ph": "/ɪnˈvenʃn/", "pos": "n.", "g": "发明"}, {"w": "upgrade", "ph": "/ˌʌpˈɡreɪd/", "pos": "v./n.", "g": "升级"}], "pc": {"ws": ["download", "engineer", "equipment", "file", "internet", "network", "online", "program", "software", "upgrade"], "it": ["You can ___ the app for free.", "My uncle is a software ___.", "The lab is full of modern ___.", "Save your work in a new ___.", "The ___ connects people around the world.", "The whole building has a wireless ___.", "Many students take ___ courses now.", "The TV ___ is very popular.", "The computer needs new ___ to run faster.", "You should ___ your phone system."], "an": ["download", "engineer", "equipment", "file", "internet", "network", "online", "program", "software", "upgrade"]}}, {"id": "u30", "name": "Unit 30", "theme": "主题词：科技与互联网（二）", "words": [{"w": "artificial", "ph": "/ˌɑːtɪˈfɪʃl/", "pos": "adj.", "g": "人工的；人造的"}, {"w": "automatic", "ph": "/ˌɔːtəˈmætɪk/", "pos": "adj.", "g": "自动的"}, {"w": "accurate", "ph": "/ˈækjərət/", "pos": "adj.", "g": "准确的；精确的"}, {"w": "apply", "ph": "/əˈplaɪ/", "pos": "v.", "g": "应用；申请"}, {"w": "click", "ph": "/klɪk/", "pos": "v./n.", "g": "点击"}, {"w": "detect", "ph": "/dɪˈtekt/", "pos": "v.", "g": "检测；察觉"}, {"w": "estimate", "ph": "/ˈestɪmeɪt/", "pos": "v./n.", "g": "估计；估算"}, {"w": "innovate", "ph": "/ˈɪnəveɪt/", "pos": "v.", "g": "创新；革新"}, {"w": "install", "ph": "/ɪnˈstɔːl/", "pos": "v.", "g": "安装；安置"}, {"w": "intelligent", "ph": "/ɪnˈtelɪdʒənt/", "pos": "adj.", "g": "智能的；聪明的"}, {"w": "operate", "ph": "/ˈɒpəreɪt/", "pos": "v.", "g": "操作；运转；动手术"}, {"w": "scan", "ph": "/skæn/", "pos": "v.", "g": "扫描；浏览"}, {"w": "search", "ph": "/sɜːtʃ/", "pos": "v./n.", "g": "搜索；搜寻"}, {"w": "signal", "ph": "/ˈsɪɡnəl/", "pos": "n.", "g": "信号"}, {"w": "smart", "ph": "/smɑːt/", "pos": "adj.", "g": "智能的；聪明的"}, {"w": "terminal", "ph": "/ˈtɜːmɪnl/", "pos": "n./adj.", "g": "终端；末端的"}, {"w": "virtual", "ph": "/ˈvɜːtʃuəl/", "pos": "adj.", "g": "虚拟的"}, {"w": "wireless", "ph": "/ˈwaɪələs/", "pos": "adj.", "g": "无线的"}, {"w": "cloud", "ph": "/klaʊd/", "pos": "n.", "g": "云；云朵"}, {"w": "security", "ph": "/sɪˈkjʊərəti/", "pos": "n.", "g": "安全；保障"}], "pc": {"ws": ["artificial", "accurate", "apply", "detect", "estimate", "install", "operate", "search", "smart", "security"], "it": ["___ intelligence is changing our life.", "The report gives an ___ description of the event.", "You can ___ the new method to your study.", "The machine can ___ tiny changes in the air.", "It is hard to ___ the exact cost.", "The worker came to ___ the air conditioner.", "She knows how to ___ the machine.", "You can ___ for the information online.", "___ phones have become part of our daily life.", "The building has good ___ systems."], "an": ["Artificial", "accurate", "apply", "detect", "estimate", "install", "operate", "search", "Smart", "security"]}}, {"id": "u31", "name": "Unit 31", "theme": "主题词：社会与生活（一）", "words": [{"w": "address", "ph": "/əˈdres/", "pos": "n./v.", "g": "地址；处理；演讲"}, {"w": "adult", "ph": "/ˈædʌlt/", "pos": "n.", "g": "成人；成年人"}, {"w": "age", "ph": "/eɪdʒ/", "pos": "n./v.", "g": "年龄；时代"}, {"w": "apartment", "ph": "/əˈpɑːtmənt/", "pos": "n.", "g": "公寓"}, {"w": "birthday", "ph": "/ˈbɜːθdeɪ/", "pos": "n.", "g": "生日"}, {"w": "citizen", "ph": "/ˈsɪtɪzn/", "pos": "n.", "g": "公民；市民"}, {"w": "crime", "ph": "/kraɪm/", "pos": "n.", "g": "犯罪；罪行"}, {"w": "daily", "ph": "/ˈdeɪli/", "pos": "adj./adv.", "g": "每日的；每天"}, {"w": "festival", "ph": "/ˈfestɪvl/", "pos": "n.", "g": "节日"}, {"w": "furniture", "ph": "/ˈfɜːnɪtʃə(r)/", "pos": "n.", "g": "家具"}, {"w": "housing", "ph": "/ˈhaʊzɪŋ/", "pos": "n.", "g": "住房；住宅"}, {"w": "neighbor", "ph": "/ˈneɪbə(r)/", "pos": "n.", "g": "邻居"}, {"w": "newspaper", "ph": "/ˈnjuːzpeɪpə(r)/", "pos": "n.", "g": "报纸"}, {"w": "police", "ph": "/pəˈliːs/", "pos": "n.", "g": "警察；警方"}, {"w": "privacy", "ph": "/ˈprɪvəsi/", "pos": "n.", "g": "隐私"}, {"w": "rent", "ph": "/rent/", "pos": "n./v.", "g": "租金；租用"}, {"w": "transport", "ph": "/ˈtrænspɔːt/", "pos": "n./v.", "g": "交通；运输"}, {"w": "travel", "ph": "/ˈtrævl/", "pos": "v./n.", "g": "旅行"}, {"w": "village", "ph": "/ˈvɪlɪdʒ/", "pos": "n.", "g": "村庄"}, {"w": "welfare", "ph": "/ˈwelfeə(r)/", "pos": "n.", "g": "福利"}], "pc": {"ws": ["address", "adult", "citizen", "crime", "daily", "festival", "neighbor", "privacy", "rent", "transport"], "it": ["Please write your ___ on the envelope.", "Everyone should act like a responsible ___.", "As a ___, you should obey the law.", "The police are working to reduce ___ in the city.", "Exercise is part of my ___ routine.", "The Spring Festival is the most important ___ in China.", "Our ___ is very kind to us.", "Everyone has the right to ___.", "The ___ for the apartment is not high.", "The city has convenient public ___."], "an": ["address", "adult", "citizen", "crime", "daily", "festival", "neighbor", "privacy", "rent", "transport"]}}, {"id": "u32", "name": "Unit 32", "theme": "主题词：社会与生活（二）", "words": [{"w": "custom", "ph": "/ˈkʌstəm/", "pos": "n.", "g": "风俗；习惯"}, {"w": "event", "ph": "/ɪˈvent/", "pos": "n.", "g": "事件；活动"}, {"w": "gather", "ph": "/ˈɡæðə(r)/", "pos": "v.", "g": "聚集；收集"}, {"w": "hobby", "ph": "/ˈhɒbi/", "pos": "n.", "g": "爱好"}, {"w": "housework", "ph": "/ˈhaʊswɜːk/", "pos": "n.", "g": "家务"}, {"w": "marriage", "ph": "/ˈmærɪdʒ/", "pos": "n.", "g": "婚姻"}, {"w": "menu", "ph": "/ˈmenjuː/", "pos": "n.", "g": "菜单"}, {"w": "occasion", "ph": "/əˈkeɪʒn/", "pos": "n.", "g": "场合；时机"}, {"w": "ordinary", "ph": "/ˈɔːdnri/", "pos": "adj.", "g": "普通的；平凡的"}, {"w": "party", "ph": "/ˈpɑːti/", "pos": "n.", "g": "聚会；政党"}, {"w": "relative", "ph": "/ˈrelətɪv/", "pos": "n./adj.", "g": "亲戚；相对的"}, {"w": "restaurant", "ph": "/ˈrestrɒnt/", "pos": "n.", "g": "餐馆"}, {"w": "typical", "ph": "/ˈtɪpɪkl/", "pos": "adj.", "g": "典型的"}, {"w": "social", "ph": "/ˈsəʊʃl/", "pos": "adj.", "g": "社会的；社交的"}, {"w": "urban", "ph": "/ˈɜːbən/", "pos": "adj.", "g": "城市的"}, {"w": "rural", "ph": "/ˈrʊərəl/", "pos": "adj.", "g": "农村的"}, {"w": "interact", "ph": "/ˌɪntərˈækt/", "pos": "v.", "g": "互动；相互作用"}, {"w": "household", "ph": "/ˈhaʊshəʊld/", "pos": "n.", "g": "家庭；住户"}, {"w": "routine", "ph": "/ruːˈtiːn/", "pos": "n./adj.", "g": "日常事务；常规的"}, {"w": "accommodation", "ph": "/əˌkɒməˈdeɪʃn/", "pos": "n.", "g": "住宿；膳宿"}], "pc": {"ws": ["custom", "event", "gather", "hobby", "ordinary", "occasion", "relative", "social", "typical", "urban"], "it": ["Every country has its own ___.", "The sports meeting is an important ___ of the year.", "The whole family ___ at home during the festival.", "Reading and painting are my ___.", "The story is about an ___ man's great courage.", "The wedding was a happy ___.", "I visited my ___ during the holiday.", "We should take part in ___ activities.", "This dish is ___ of the local food.", "Life in ___ areas is fast and busy."], "an": ["customs", "event", "gathers", "hobbies", "ordinary", "occasion", "relatives", "social", "typical", "urban"]}}, {"id": "u33", "name": "Unit 33", "theme": "主题词：环境与自然（一）", "words": [{"w": "agriculture", "ph": "/ˈæɡrɪkʌltʃə(r)/", "pos": "n.", "g": "农业"}, {"w": "climate", "ph": "/ˈklaɪmət/", "pos": "n.", "g": "气候"}, {"w": "earth", "ph": "/ɜːθ/", "pos": "n.", "g": "地球；泥土"}, {"w": "flood", "ph": "/flʌd/", "pos": "n./v.", "g": "洪水；淹没"}, {"w": "forest", "ph": "/ˈfɒrɪst/", "pos": "n.", "g": "森林"}, {"w": "garbage", "ph": "/ˈɡɑːbɪdʒ/", "pos": "n.", "g": "垃圾"}, {"w": "gas", "ph": "/ɡæs/", "pos": "n.", "g": "气体；汽油"}, {"w": "landscape", "ph": "/ˈlændskeɪp/", "pos": "n.", "g": "风景；地形"}, {"w": "ocean", "ph": "/ˈəʊʃn/", "pos": "n.", "g": "海洋"}, {"w": "planet", "ph": "/ˈplænɪt/", "pos": "n.", "g": "行星"}, {"w": "pollution", "ph": "/pəˈluːʃn/", "pos": "n.", "g": "污染"}, {"w": "recycle", "ph": "/ˌriːˈsaɪkl/", "pos": "v.", "g": "回收利用"}, {"w": "renewable", "ph": "/rɪˈnjuːəbl/", "pos": "adj.", "g": "可再生的"}, {"w": "soil", "ph": "/sɔɪl/", "pos": "n.", "g": "土壤"}, {"w": "species", "ph": "/ˈspiːʃiːz/", "pos": "n.", "g": "物种"}, {"w": "temperature", "ph": "/ˈtemprətʃə(r)/", "pos": "n.", "g": "温度"}, {"w": "volcano", "ph": "/vɒlˈkeɪnəʊ/", "pos": "n.", "g": "火山"}, {"w": "weather", "ph": "/ˈweðə(r)/", "pos": "n.", "g": "天气"}, {"w": "wildlife", "ph": "/ˈwaɪldlaɪf/", "pos": "n.", "g": "野生动物"}, {"w": "sustainable", "ph": "/səˈsteɪnəbl/", "pos": "adj.", "g": "可持续的"}], "pc": {"ws": ["climate", "flood", "forest", "pollution", "recycle", "renewable", "soil", "temperature", "wildlife", "sustainable"], "it": ["The ___ in the south is warm and wet.", "The heavy rain caused a ___ in the valley.", "We should protect the ___ from fire.", "Air ___ is a serious problem in big cities.", "We should ___ paper and plastic to save resources.", "Solar energy is a ___ resource.", "The ___ here is rich and dark.", "The ___ dropped suddenly last night.", "The park is home to many kinds of ___.", "We need ___ development for the future."], "an": ["climate", "flood", "forest", "pollution", "recycle", "renewable", "soil", "temperature", "wildlife", "sustainable"]}}, {"id": "u34", "name": "Unit 34", "theme": "主题词：环境与自然（二）", "words": [{"w": "conservation", "ph": "/ˌkɒnsəˈveɪʃn/", "pos": "n.", "g": "保护；保存"}, {"w": "ecology", "ph": "/iˈkɒlədʒi/", "pos": "n.", "g": "生态"}, {"w": "emission", "ph": "/ɪˈmɪʃn/", "pos": "n.", "g": "排放；排放物"}, {"w": "greenhouse", "ph": "/ˈɡriːnhaʊs/", "pos": "n.", "g": "温室"}, {"w": "habitat", "ph": "/ˈhæbɪtæt/", "pos": "n.", "g": "栖息地"}, {"w": "mineral", "ph": "/ˈmɪnərəl/", "pos": "n.", "g": "矿物；矿物质"}, {"w": "organic", "ph": "/ɔːˈɡænɪk/", "pos": "adj.", "g": "有机的"}, {"w": "reserve", "ph": "/rɪˈzɜːv/", "pos": "v./n.", "g": "保留；预订；保护区"}, {"w": "solar", "ph": "/ˈsəʊlə(r)/", "pos": "adj.", "g": "太阳的；太阳能的"}, {"w": "tropical", "ph": "/ˈtrɒpɪkl/", "pos": "adj.", "g": "热带的"}, {"w": "poison", "ph": "/ˈpɔɪzn/", "pos": "n./v.", "g": "毒物；下毒"}, {"w": "source", "ph": "/sɔːs/", "pos": "n.", "g": "来源；源头"}, {"w": "environmental", "ph": "/ɪnˌvaɪrənˈmentl/", "pos": "adj.", "g": "环境的"}, {"w": "fuel", "ph": "/ˈfjuːəl/", "pos": "n.", "g": "燃料"}, {"w": "chemical", "ph": "/ˈkemɪkl/", "pos": "adj./n.", "g": "化学的；化学品"}, {"w": "carbon", "ph": "/ˈkɑːbən/", "pos": "n.", "g": "碳"}, {"w": "ecosystem", "ph": "/ˈiːkəʊsɪstəm/", "pos": "n.", "g": "生态系统"}, {"w": "drought", "ph": "/draʊt/", "pos": "n.", "g": "干旱"}, {"w": "crisis", "ph": "/ˈkraɪsɪs/", "pos": "n.", "g": "危机"}, {"w": "irrigation", "ph": "/ˌɪrɪˈɡeɪʃn/", "pos": "n.", "g": "灌溉"}], "pc": {"ws": ["conservation", "emission", "habitat", "organic", "reserve", "source", "environmental", "carbon", "drought", "crisis"], "it": ["Wildlife ___ needs public support.", "The new cars produce fewer ___ of gas.", "The forest is the natural ___ of many animals.", "___ food is becoming popular.", "The government set up a nature ___ in the area.", "The river is the main ___ of water for the town.", "We should raise ___ awareness.", "We should reduce ___ emissions to slow global warming.", "The ___ destroyed the crops this year.", "The country is facing an energy ___."], "an": ["conservation", "emissions", "habitat", "Organic", "reserve", "source", "environmental", "carbon", "drought", "crisis"]}}, {"id": "u35", "name": "Unit 35", "theme": "主题词：健康与医疗（一）", "words": [{"w": "accident", "ph": "/ˈæksɪdənt/", "pos": "n.", "g": "事故；意外"}, {"w": "blood", "ph": "/blʌd/", "pos": "n.", "g": "血液"}, {"w": "brain", "ph": "/breɪn/", "pos": "n.", "g": "大脑"}, {"w": "breath", "ph": "/breθ/", "pos": "n.", "g": "呼吸；气息"}, {"w": "cancer", "ph": "/ˈkænsə(r)/", "pos": "n.", "g": "癌症"}, {"w": "cough", "ph": "/kɒf/", "pos": "v./n.", "g": "咳嗽"}, {"w": "cure", "ph": "/kjʊə(r)/", "pos": "v./n.", "g": "治愈；疗法"}, {"w": "disease", "ph": "/dɪˈziːz/", "pos": "n.", "g": "疾病"}, {"w": "exercise", "ph": "/ˈeksəsaɪz/", "pos": "n./v.", "g": "锻炼；练习"}, {"w": "fever", "ph": "/ˈfiːvə(r)/", "pos": "n.", "g": "发烧"}, {"w": "hospital", "ph": "/ˈhɒspɪtl/", "pos": "n.", "g": "医院"}, {"w": "illness", "ph": "/ˈɪlnəs/", "pos": "n.", "g": "疾病"}, {"w": "injury", "ph": "/ˈɪndʒəri/", "pos": "n.", "g": "伤害；损伤"}, {"w": "medicine", "ph": "/ˈmedsn/", "pos": "n.", "g": "药；医学"}, {"w": "nutrition", "ph": "/njuˈtrɪʃn/", "pos": "n.", "g": "营养"}, {"w": "operation", "ph": "/ˌɒpəˈreɪʃn/", "pos": "n.", "g": "手术；操作"}, {"w": "pain", "ph": "/peɪn/", "pos": "n.", "g": "疼痛"}, {"w": "symptom", "ph": "/ˈsɪmptəm/", "pos": "n.", "g": "症状"}, {"w": "treatment", "ph": "/ˈtriːtmənt/", "pos": "n.", "g": "治疗；对待"}, {"w": "wound", "ph": "/wuːnd/", "pos": "n./v.", "g": "伤口；受伤"}], "pc": {"ws": ["accident", "breath", "cure", "disease", "exercise", "fever", "injury", "medicine", "symptom", "treatment"], "it": ["He was injured in a traffic ___.", "Take a deep ___ and relax.", "There is still no ___ for the disease.", "The ___ spread quickly in the area.", "Regular ___ keeps you healthy.", "She has a high ___ and needs rest.", "He suffered a leg ___ in the game.", "Take the ___ three times a day.", "A cough is a common ___ of a cold.", "He is receiving ___ in the hospital."], "an": ["accident", "breath", "cure", "disease", "exercise", "fever", "injury", "medicine", "symptom", "treatment"]}}, {"id": "u36", "name": "Unit 36", "theme": "主题词：健康与医疗（二）", "words": [{"w": "diet", "ph": "/ˈdaɪət/", "pos": "n.", "g": "饮食；节食"}, {"w": "recovery", "ph": "/rɪˈkʌvəri/", "pos": "n.", "g": "恢复；痊愈"}, {"w": "virus", "ph": "/ˈvaɪrəs/", "pos": "n.", "g": "病毒"}, {"w": "injection", "ph": "/ɪnˈdʒekʃn/", "pos": "n.", "g": "注射"}, {"w": "psychological", "ph": "/ˌsaɪkəˈlɒdʒɪkl/", "pos": "adj.", "g": "心理的"}, {"w": "sleep", "ph": "/sliːp/", "pos": "v./n.", "g": "睡觉"}, {"w": "vitamin", "ph": "/ˈvɪtəmɪn/", "pos": "n.", "g": "维生素"}, {"w": "remedy", "ph": "/ˈremədi/", "pos": "n./v.", "g": "疗法；补救办法"}, {"w": "prescription", "ph": "/prɪˈskrɪpʃn/", "pos": "n.", "g": "处方"}, {"w": "prevention", "ph": "/prɪˈvenʃn/", "pos": "n.", "g": "预防"}, {"w": "hygiene", "ph": "/ˈhaɪdʒiːn/", "pos": "n.", "g": "卫生"}, {"w": "diagnose", "ph": "/ˈdaɪəɡnəʊz/", "pos": "v.", "g": "诊断"}, {"w": "obesity", "ph": "/əʊˈbiːsəti/", "pos": "n.", "g": "肥胖"}, {"w": "disability", "ph": "/ˌdɪsəˈbɪləti/", "pos": "n.", "g": "残疾；缺陷"}, {"w": "fitness", "ph": "/ˈfɪtnəs/", "pos": "n.", "g": "健康；健身"}, {"w": "muscle", "ph": "/ˈmʌsl/", "pos": "n.", "g": "肌肉"}, {"w": "heart", "ph": "/hɑːt/", "pos": "n.", "g": "心脏；内心"}, {"w": "overweight", "ph": "/ˌəʊvəˈweɪt/", "pos": "adj.", "g": "超重的"}, {"w": "immune", "ph": "/ɪˈmjuːn/", "pos": "adj.", "g": "免疫的；免除的"}, {"w": "depression", "ph": "/dɪˈpreʃn/", "pos": "n.", "g": "抑郁；萧条"}], "pc": {"ws": ["diet", "recovery", "virus", "sleep", "vitamin", "prevention", "diagnose", "fitness", "immune", "depression"], "it": ["A balanced ___ keeps you healthy.", "His ___ from the illness took months.", "The ___ can spread through the air.", "You need enough ___ to stay focused.", "Fruits are rich in ___.", "___ is better than cure.", "The doctor ___ the illness correctly.", "Swimming is good for ___.", "Exercise strengthens your ___ system.", "He is suffering from ___."], "an": ["diet", "recovery", "virus", "sleep", "vitamins", "Prevention", "diagnosed", "fitness", "immune", "depression"]}}, {"id": "u37", "name": "Unit 37", "theme": "主题词：经济与职场（一）", "words": [{"w": "account", "ph": "/əˈkaʊnt/", "pos": "n./v.", "g": "账户；叙述；说明"}, {"w": "advertise", "ph": "/ˈædvətaɪz/", "pos": "v.", "g": "做广告；宣传"}, {"w": "budget", "ph": "/ˈbʌdʒɪt/", "pos": "n./v.", "g": "预算；编预算"}, {"w": "capital", "ph": "/ˈkæpɪtl/", "pos": "n.", "g": "资本；首都"}, {"w": "cash", "ph": "/kæʃ/", "pos": "n.", "g": "现金"}, {"w": "cost", "ph": "/kɒst/", "pos": "n./v.", "g": "成本；花费"}, {"w": "credit", "ph": "/ˈkredɪt/", "pos": "n.", "g": "信用；学分"}, {"w": "currency", "ph": "/ˈkʌrənsi/", "pos": "n.", "g": "货币"}, {"w": "debt", "ph": "/det/", "pos": "n.", "g": "债务；欠款"}, {"w": "discount", "ph": "/ˈdɪskaʊnt/", "pos": "n./v.", "g": "折扣；打折"}, {"w": "insurance", "ph": "/ɪnˈʃʊərəns/", "pos": "n.", "g": "保险"}, {"w": "investment", "ph": "/ɪnˈvestmənt/", "pos": "n.", "g": "投资"}, {"w": "loan", "ph": "/ləʊn/", "pos": "n./v.", "g": "贷款；借出"}, {"w": "market", "ph": "/ˈmɑːkɪt/", "pos": "n.", "g": "市场"}, {"w": "profit", "ph": "/ˈprɒfɪt/", "pos": "n./v.", "g": "利润；获利"}, {"w": "salary", "ph": "/ˈsæləri/", "pos": "n.", "g": "薪水；工资"}, {"w": "stock", "ph": "/stɒk/", "pos": "n.", "g": "股票；库存"}, {"w": "tax", "ph": "/tæks/", "pos": "n./v.", "g": "税；征税"}, {"w": "trade", "ph": "/treɪd/", "pos": "n./v.", "g": "贸易；交易"}, {"w": "wage", "ph": "/weɪdʒ/", "pos": "n.", "g": "工资；报酬"}], "pc": {"ws": ["account", "budget", "cash", "credit", "debt", "discount", "insurance", "profit", "salary", "stock"], "it": ["I opened a bank ___ last month.", "We must keep within the ___.", "Can I pay in ___?", "You can pay by ___ card.", "He is in ___ because of the loan.", "Students can get a ___ on books.", "He bought health ___ last year.", "The company made a big ___ this year.", "He gets a monthly ___ of 8,000 yuan.", "She invested in the ___ market."], "an": ["account", "budget", "cash", "credit", "debt", "discount", "insurance", "profit", "salary", "stock"]}}, {"id": "u38", "name": "Unit 38", "theme": "主题词：经济与职场（二）", "words": [{"w": "applicant", "ph": "/ˈæplɪkənt/", "pos": "n.", "g": "申请人"}, {"w": "appoint", "ph": "/əˈpɔɪnt/", "pos": "v.", "g": "任命；约定"}, {"w": "colleague", "ph": "/ˈkɒliːɡ/", "pos": "n.", "g": "同事"}, {"w": "conference", "ph": "/ˈkɒnfərəns/", "pos": "n.", "g": "会议"}, {"w": "cooperation", "ph": "/kəʊˌɒpəˈreɪʃn/", "pos": "n.", "g": "合作"}, {"w": "department", "ph": "/dɪˈpɑːtmənt/", "pos": "n.", "g": "部门；系"}, {"w": "enterprise", "ph": "/ˈentəpraɪz/", "pos": "n.", "g": "企业；事业"}, {"w": "hire", "ph": "/ˈhaɪə(r)/", "pos": "v.", "g": "雇佣；租用"}, {"w": "manager", "ph": "/ˈmænɪdʒə(r)/", "pos": "n.", "g": "经理；管理者"}, {"w": "negotiation", "ph": "/nɪˌɡəʊʃiˈeɪʃn/", "pos": "n.", "g": "谈判；协商"}, {"w": "overtime", "ph": "/ˈəʊvətaɪm/", "pos": "n./adv.", "g": "加班；加班地"}, {"w": "promotion", "ph": "/prəˈməʊʃn/", "pos": "n.", "g": "晋升；促销"}, {"w": "recruit", "ph": "/rɪˈkruːt/", "pos": "v./n.", "g": "招聘；招募"}, {"w": "resume", "ph": "/ˈrezjumeɪ/", "pos": "n.", "g": "简历"}, {"w": "staff", "ph": "/stɑːf/", "pos": "n.", "g": "员工；全体职员"}, {"w": "vacancy", "ph": "/ˈveɪkənsi/", "pos": "n.", "g": "空缺；空位"}, {"w": "unemployment", "ph": "/ˌʌnɪmˈplɔɪmənt/", "pos": "n.", "g": "失业"}, {"w": "qualification", "ph": "/ˌkwɒlɪfɪˈkeɪʃn/", "pos": "n.", "g": "资格；资历"}, {"w": "bonus", "ph": "/ˈbəʊnəs/", "pos": "n.", "g": "奖金；红利"}, {"w": "retirement", "ph": "/rɪˈtaɪəmənt/", "pos": "n.", "g": "退休"}], "pc": {"ws": ["appoint", "colleague", "conference", "hire", "manager", "negotiation", "promotion", "recruit", "resume", "staff"], "it": ["The company ___ her as the new manager.", "My ___ are helpful and friendly.", "She attended an international ___ last week.", "The company decided to ___ more workers.", "The ___ praised the team for their hard work.", "The ___ between the two sides lasted two days.", "She got a ___ after two years of hard work.", "The company is ___ new graduates.", "Please send your ___ to the manager.", "The hotel has a ___ of fifty."], "an": ["appointed", "colleagues", "conference", "hire", "manager", "negotiation", "promotion", "recruiting", "resume", "staff"]}}, {"id": "u39", "name": "Unit 39", "theme": "主题词：文化与情感（一）", "words": [{"w": "art", "ph": "/ɑːt/", "pos": "n.", "g": "艺术"}, {"w": "artist", "ph": "/ˈɑːtɪst/", "pos": "n.", "g": "艺术家"}, {"w": "emotion", "ph": "/ɪˈməʊʃn/", "pos": "n.", "g": "情感；情绪"}, {"w": "feeling", "ph": "/ˈfiːlɪŋ/", "pos": "n.", "g": "感觉；感受"}, {"w": "film", "ph": "/fɪlm/", "pos": "n.", "g": "电影；胶卷"}, {"w": "happiness", "ph": "/ˈhæpinəs/", "pos": "n.", "g": "幸福；快乐"}, {"w": "mood", "ph": "/muːd/", "pos": "n.", "g": "心情；情绪"}, {"w": "music", "ph": "/ˈmjuːzɪk/", "pos": "n.", "g": "音乐"}, {"w": "novel", "ph": "/ˈnɒvl/", "pos": "n./adj.", "g": "小说；新颖的"}, {"w": "painting", "ph": "/ˈpeɪntɪŋ/", "pos": "n.", "g": "绘画；油画"}, {"w": "poetry", "ph": "/ˈpəʊətri/", "pos": "n.", "g": "诗歌"}, {"w": "praise", "ph": "/preɪz/", "pos": "n./v.", "g": "赞扬；称赞"}, {"w": "pride", "ph": "/praɪd/", "pos": "n.", "g": "骄傲；自豪"}, {"w": "regret", "ph": "/rɪˈɡret/", "pos": "n./v.", "g": "遗憾；后悔"}, {"w": "sorrow", "ph": "/ˈsɒrəʊ/", "pos": "n.", "g": "悲伤；悲痛"}, {"w": "spirit", "ph": "/ˈspɪrɪt/", "pos": "n.", "g": "精神；心灵"}, {"w": "talent", "ph": "/ˈtælənt/", "pos": "n.", "g": "天赋；才能"}, {"w": "joy", "ph": "/dʒɔɪ/", "pos": "n.", "g": "欢乐；喜悦"}, {"w": "affection", "ph": "/əˈfekʃn/", "pos": "n.", "g": "喜爱；感情"}, {"w": "aesthetic", "ph": "/iːsˈθetɪk/", "pos": "adj.", "g": "审美的；美学的"}], "pc": {"ws": ["emotion", "feeling", "happiness", "mood", "music", "praise", "pride", "talent", "joy", "spirit"], "it": ["The film moved the audience's ___.", "I have a good ___ about the result.", "Health brings us true ___.", "She is in a good ___ today.", "Listening to ___ helps me relax.", "The teacher ___ him for his progress.", "She takes ___ in her work.", "She has a ___ for music.", "The children shouted with ___.", "Team ___ made them win the game."], "an": ["emotions", "feeling", "happiness", "mood", "music", "praised", "pride", "talent", "joy", "spirit"]}}, {"id": "u40", "name": "Unit 40", "theme": "主题词：文化与情感（二）", "words": [{"w": "faith", "ph": "/feɪθ/", "pos": "n.", "g": "信仰；信心"}, {"w": "courage", "ph": "/ˈkʌrɪdʒ/", "pos": "n.", "g": "勇气"}, {"w": "desire", "ph": "/dɪˈzaɪə(r)/", "pos": "n./v.", "g": "渴望；欲望"}, {"w": "envy", "ph": "/ˈenvi/", "pos": "n./v.", "g": "嫉妒；羡慕"}, {"w": "fear", "ph": "/fɪə(r)/", "pos": "n./v.", "g": "恐惧；害怕"}, {"w": "generosity", "ph": "/ˌdʒenəˈrɒsəti/", "pos": "n.", "g": "慷慨；大方"}, {"w": "guilt", "ph": "/ɡɪlt/", "pos": "n.", "g": "内疚；罪行"}, {"w": "honesty", "ph": "/ˈɒnəsti/", "pos": "n.", "g": "诚实"}, {"w": "hope", "ph": "/həʊp/", "pos": "n./v.", "g": "希望"}, {"w": "jealousy", "ph": "/ˈdʒeləsi/", "pos": "n.", "g": "嫉妒"}, {"w": "kindness", "ph": "/ˈkaɪndnəs/", "pos": "n.", "g": "善良；好意"}, {"w": "patience", "ph": "/ˈpeɪʃns/", "pos": "n.", "g": "耐心"}, {"w": "passion", "ph": "/ˈpæʃn/", "pos": "n.", "g": "热情；激情"}, {"w": "sympathy", "ph": "/ˈsɪmpəθi/", "pos": "n.", "g": "同情；赞同"}, {"w": "tolerance", "ph": "/ˈtɒlərəns/", "pos": "n.", "g": "宽容；容忍"}, {"w": "virtue", "ph": "/ˈvɜːtʃuː/", "pos": "n.", "g": "美德"}, {"w": "gratitude", "ph": "/ˈɡrætɪtjuːd/", "pos": "n.", "g": "感激；感谢"}, {"w": "curiosity", "ph": "/ˌkjʊəriˈɒsəti/", "pos": "n.", "g": "好奇心"}, {"w": "optimism", "ph": "/ˈɒptɪmɪzəm/", "pos": "n.", "g": "乐观"}, {"w": "worship", "ph": "/ˈwɜːʃɪp/", "pos": "v./n.", "g": "崇拜；敬仰"}], "pc": {"ws": ["courage", "desire", "fear", "generosity", "honesty", "kindness", "patience", "sympathy", "curiosity", "gratitude"], "it": ["It takes ___ to admit your mistakes.", "He has a strong ___ to succeed.", "He has a ___ of speaking in public.", "Everyone admires her ___.", "___ is the best policy.", "Thank you for your ___ to me.", "Teaching children requires a lot of ___.", "She showed ___ for the homeless.", "Children are full of ___ about the world.", "He expressed his ___ to the teacher."], "an": ["courage", "desire", "fear", "generosity", "Honesty", "kindness", "patience", "sympathy", "curiosity", "gratitude"]}}, {"id": "u41", "name": "Unit 41", "theme": "主题词：逻辑与抽象概念（一）", "words": [{"w": "abstract", "ph": "/ˈæbstrækt/", "pos": "adj./n.", "g": "抽象的；摘要"}, {"w": "argument", "ph": "/ˈɑːɡjumənt/", "pos": "n.", "g": "论点；争论"}, {"w": "aspect", "ph": "/ˈæspekt/", "pos": "n.", "g": "方面；外观"}, {"w": "assumption", "ph": "/əˈsʌmpʃn/", "pos": "n.", "g": "假设；假定"}, {"w": "category", "ph": "/ˈkætəɡəri/", "pos": "n.", "g": "类别；范畴"}, {"w": "content", "ph": "/ˈkɒntent/", "pos": "n.", "g": "内容；目录"}, {"w": "context", "ph": "/ˈkɒntekst/", "pos": "n.", "g": "上下文；背景"}, {"w": "contrast", "ph": "/ˈkɒntrɑːst/", "pos": "n./v.", "g": "对比；对照"}, {"w": "criterion", "ph": "/kraɪˈtɪəriən/", "pos": "n.", "g": "标准；准则"}, {"w": "definition", "ph": "/ˌdefɪˈnɪʃn/", "pos": "n.", "g": "定义；释义"}, {"w": "evidence", "ph": "/ˈevɪdəns/", "pos": "n.", "g": "证据；迹象"}, {"w": "explanation", "ph": "/ˌekspləˈneɪʃn/", "pos": "n.", "g": "解释；说明"}, {"w": "framework", "ph": "/ˈfreɪmwɜːk/", "pos": "n.", "g": "框架；结构"}, {"w": "hypothesis", "ph": "/haɪˈpɒθəsɪs/", "pos": "n.", "g": "假设；假说"}, {"w": "perception", "ph": "/pəˈsepʃn/", "pos": "n.", "g": "感知；看法；认识"}, {"w": "proof", "ph": "/pruːf/", "pos": "n.", "g": "证据；证明"}, {"w": "proportion", "ph": "/prəˈpɔːʃn/", "pos": "n.", "g": "比例；部分"}, {"w": "purpose", "ph": "/ˈpɜːpəs/", "pos": "n.", "g": "目的；意图"}, {"w": "strategy", "ph": "/ˈstrætədʒi/", "pos": "n.", "g": "策略；战略"}, {"w": "tendency", "ph": "/ˈtendənsi/", "pos": "n.", "g": "趋势；倾向"}], "pc": {"ws": ["argument", "aspect", "category", "context", "evidence", "framework", "hypothesis", "proportion", "purpose", "strategy"], "it": ["Her ___ is supported by strong evidence.", "We should consider every ___ of the plan.", "The books fall into several ___.", "You should understand the word in ___.", "There is no ___ to support his claim.", "The essay should be written within a clear ___.", "The experiment tested the scientist's ___.", "A large ___ of students use phones in class.", "The ___ of the meeting is to plan the activity.", "The team developed a new ___ to win."], "an": ["argument", "aspect", "categories", "context", "evidence", "framework", "hypothesis", "proportion", "purpose", "strategy"]}}, {"id": "u42", "name": "Unit 42", "theme": "主题词：逻辑与抽象概念（二）", "words": [{"w": "absolute", "ph": "/ˈæbsəluːt/", "pos": "adj.", "g": "绝对的；完全的"}, {"w": "complex", "ph": "/ˈkɒmpleks/", "pos": "adj./n.", "g": "复杂的；综合体"}, {"w": "concrete", "ph": "/ˈkɒŋkriːt/", "pos": "adj.", "g": "具体的；实在的"}, {"w": "crucial", "ph": "/ˈkruːʃl/", "pos": "adj.", "g": "至关重要的"}, {"w": "fundamental", "ph": "/ˌfʌndəˈmentl/", "pos": "adj.", "g": "基本的；根本的"}, {"w": "logical", "ph": "/ˈlɒdʒɪkl/", "pos": "adj.", "g": "逻辑的；合理的"}, {"w": "objective", "ph": "/əbˈdʒektɪv/", "pos": "adj./n.", "g": "客观的；目标"}, {"w": "precise", "ph": "/prɪˈsaɪs/", "pos": "adj.", "g": "精确的；准确的"}, {"w": "rational", "ph": "/ˈræʃnəl/", "pos": "adj.", "g": "理性的；合理的"}, {"w": "subjective", "ph": "/səbˈdʒektɪv/", "pos": "adj.", "g": "主观的"}, {"w": "theoretical", "ph": "/ˌθɪəˈretɪkl/", "pos": "adj.", "g": "理论的"}, {"w": "universal", "ph": "/ˌjuːnɪˈvɜːsl/", "pos": "adj.", "g": "普遍的；通用的"}, {"w": "valid", "ph": "/ˈvælɪd/", "pos": "adj.", "g": "有效的；正当的"}, {"w": "analyze", "ph": "/ˈænəlaɪz/", "pos": "v.", "g": "分析"}, {"w": "evaluate", "ph": "/ɪˈvæljueɪt/", "pos": "v.", "g": "评估；评价"}, {"w": "identify", "ph": "/aɪˈdentɪfaɪ/", "pos": "v.", "g": "识别；确认"}, {"w": "interpret", "ph": "/ɪnˈtɜːprɪt/", "pos": "v.", "g": "解释；口译"}, {"w": "summarize", "ph": "/ˈsʌməraɪz/", "pos": "v.", "g": "总结；概括"}, {"w": "define", "ph": "/dɪˈfaɪn/", "pos": "v.", "g": "定义；界定"}, {"w": "clarify", "ph": "/ˈklærəfaɪ/", "pos": "v.", "g": "澄清；阐明"}], "pc": {"ws": ["complex", "crucial", "fundamental", "objective", "precise", "rational", "universal", "analyze", "identify", "summarize"], "it": ["This is a ___ problem that needs careful thought.", "Time management is ___ for college students.", "Reading is a ___ skill in learning.", "Teachers should be ___ when grading papers.", "Please give me ___ instructions.", "Try to make a ___ decision.", "English is a ___ language of business.", "We need to ___ the data carefully.", "The police ___ the thief from the video.", "Please ___ the main points of the article."], "an": ["complex", "crucial", "fundamental", "objective", "precise", "rational", "universal", "analyze", "identified", "summarize"]}}, {"id": "u43", "name": "Unit 43", "theme": "易混词与高频难词（一）", "words": [{"w": "principal", "ph": "/ˈprɪnsəpl/", "pos": "adj./n.", "g": "主要的；校长"}, {"w": "principle", "ph": "/ˈprɪnsəpl/", "pos": "n.", "g": "原则；原理"}, {"w": "economic", "ph": "/ˌiːkəˈnɒmɪk/", "pos": "adj.", "g": "经济的"}, {"w": "economical", "ph": "/ˌiːkəˈnɒmɪkl/", "pos": "adj.", "g": "节约的；经济的"}, {"w": "industrial", "ph": "/ɪnˈdʌstriəl/", "pos": "adj.", "g": "工业的"}, {"w": "sensitive", "ph": "/ˈsensətɪv/", "pos": "adj.", "g": "敏感的"}, {"w": "sensible", "ph": "/ˈsensəbl/", "pos": "adj.", "g": "明智的；合理的"}, {"w": "considerable", "ph": "/kənˈsɪdərəbl/", "pos": "adj.", "g": "相当大的；可观的"}, {"w": "considerate", "ph": "/kənˈsɪdərət/", "pos": "adj.", "g": "体贴的；考虑周到的"}, {"w": "distribute", "ph": "/dɪˈstrɪbjuːt/", "pos": "v.", "g": "分发；分配"}, {"w": "expose", "ph": "/ɪkˈspəʊz/", "pos": "v.", "g": "暴露；揭露"}, {"w": "deserve", "ph": "/dɪˈzɜːv/", "pos": "v.", "g": "值得；应得"}, {"w": "emerge", "ph": "/ɪˈmɜːdʒ/", "pos": "v.", "g": "出现；浮现"}, {"w": "emphasize", "ph": "/ˈemfəsaɪz/", "pos": "v.", "g": "强调"}, {"w": "endure", "ph": "/ɪnˈdjʊə(r)/", "pos": "v.", "g": "忍受；持续"}, {"w": "engage", "ph": "/ɪnˈɡeɪdʒ/", "pos": "v.", "g": "从事；吸引；订婚"}, {"w": "enhance", "ph": "/ɪnˈhɑːns/", "pos": "v.", "g": "提高；增强"}, {"w": "ensure", "ph": "/ɪnˈʃʊə(r)/", "pos": "v.", "g": "确保；保证"}, {"w": "encounter", "ph": "/ɪnˈkaʊntə(r)/", "pos": "v./n.", "g": "遭遇；遇到"}, {"w": "purchase", "ph": "/ˈpɜːtʃəs/", "pos": "v./n.", "g": "购买"}], "pc": {"ws": ["principle", "economic", "sensitive", "sensible", "considerable", "distribute", "expose", "deserve", "emphasize", "ensure"], "it": ["She sticks to her ___ in everything she does.", "The country is experiencing rapid ___ growth.", "She is ___ to criticism.", "It was a ___ decision to save money.", "The project needs a ___ amount of money.", "The teacher ___ the test papers to the class.", "Too much sun can ___ your skin to harm.", "You ___ a rest after all that hard work.", "The teacher ___ the importance of reading.", "Please ___ that the door is locked."], "an": ["principles", "economic", "sensitive", "sensible", "considerable", "distributed", "expose", "deserve", "emphasized", "ensure"]}}, {"id": "u44", "name": "Unit 44", "theme": "易混词与高频难词（二）", "words": [{"w": "relieve", "ph": "/rɪˈliːv/", "pos": "v.", "g": "缓解；减轻"}, {"w": "sacrifice", "ph": "/ˈsækrɪfaɪs/", "pos": "v./n.", "g": "牺牲"}, {"w": "seize", "ph": "/siːz/", "pos": "v.", "g": "抓住；夺取"}, {"w": "withstand", "ph": "/wɪðˈstænd/", "pos": "v.", "g": "抵挡；承受"}, {"w": "accompany", "ph": "/əˈkʌmpəni/", "pos": "v.", "g": "陪伴；伴随"}, {"w": "accumulate", "ph": "/əˈkjuːmjəleɪt/", "pos": "v.", "g": "积累；积聚"}, {"w": "anticipate", "ph": "/ænˈtɪsɪpeɪt/", "pos": "v.", "g": "预期；预料"}, {"w": "ban", "ph": "/bæn/", "pos": "v./n.", "g": "禁止；禁令"}, {"w": "burden", "ph": "/ˈbɜːdn/", "pos": "n./v.", "g": "负担；使负重"}, {"w": "comprehend", "ph": "/ˌkɒmprɪˈhend/", "pos": "v.", "g": "理解；领会"}, {"w": "deny", "ph": "/dɪˈnaɪ/", "pos": "v.", "g": "否认；拒绝"}, {"w": "distinguish", "ph": "/dɪˈstɪŋɡwɪʃ/", "pos": "v.", "g": "区分；辨别"}, {"w": "dominate", "ph": "/ˈdɒmɪneɪt/", "pos": "v.", "g": "支配；主导"}, {"w": "deliver", "ph": "/dɪˈlɪvə(r)/", "pos": "v.", "g": "递送；发表（演讲）"}, {"w": "devote", "ph": "/dɪˈvəʊt/", "pos": "v.", "g": "奉献；致力于"}, {"w": "demonstrate", "ph": "/ˈdemənstreɪt/", "pos": "v.", "g": "证明；演示"}, {"w": "decline", "ph": "/dɪˈklaɪn/", "pos": "v./n.", "g": "下降；拒绝"}, {"w": "delay", "ph": "/dɪˈleɪ/", "pos": "v./n.", "g": "延迟；耽搁"}, {"w": "derive", "ph": "/dɪˈraɪv/", "pos": "v.", "g": "获得；源于"}, {"w": "preserve", "ph": "/prɪˈzɜːv/", "pos": "v.", "g": "保护；保存"}], "pc": {"ws": ["relieve", "sacrifice", "seize", "accumulate", "anticipate", "deny", "distinguish", "deliver", "decline", "preserve"], "it": ["The medicine ___ his headache quickly.", "She ___ her rest time to help others.", "___ the chance before it is too late.", "He ___ rich experience over the years.", "We ___ that the price will rise.", "He ___ stealing the money.", "It is difficult to ___ the two twins.", "The postman ___ letters every morning.", "The number of students is on the ___.", "We should ___ our cultural heritage."], "an": ["relieved", "sacrificed", "Seize", "accumulated", "anticipate", "denied", "distinguish", "delivers", "decline", "preserve"]}}, {"id": "bonus", "name": "收官彩蛋", "theme": "", "words": [{"w": "persevere", "ph": "/ˌpɜːsɪˈvɪə(r)/", "pos": "v.", "g": "坚持不懈"}, {"w": "perseverance", "ph": "/ˌpɜːsɪˈvɪərəns/", "pos": "n.", "g": "毅力；坚持不懈"}, {"w": "resilience", "ph": "/rɪˈzɪliəns/", "pos": "n.", "g": "韧性；恢复力"}, {"w": "mindset", "ph": "/ˈmaɪndset/", "pos": "n.", "g": "心态；思维方式"}, {"w": "motivation", "ph": "/ˌməʊtɪˈveɪʃn/", "pos": "n.", "g": "动力；动机"}, {"w": "dedication", "ph": "/ˌdedɪˈkeɪʃn/", "pos": "n.", "g": "奉献；专注"}, {"w": "aspiration", "ph": "/ˌæspəˈreɪʃn/", "pos": "n.", "g": "抱负；渴望"}, {"w": "breakthrough", "ph": "/ˈbreɪkθruː/", "pos": "n.", "g": "突破"}], "pc": {"ws": [], "it": [], "an": []}}];
+
+/* ================= 工具 ================= */
+function $(id){return document.getElementById(id)}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function levenshtein(a,b){
+  var m=a.length,n=b.length;if(m===0)return n;if(n===0)return m;
+  var p=new Array(n+1),c=new Array(n+1),i,j;
+  for(j=0;j<=n;j++)p[j]=j;
+  for(i=1;i<=m;i++){c[0]=i;for(j=1;j<=n;j++){var cost=a[i-1]===b[j-1]?0:1;c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+cost)}var t=p;p=c;c=t}
+  return p[n];
+}
+var ALL_WORDS=[];
+DATA.forEach(function(u){u.words.forEach(function(w){ALL_WORDS.push({u:u.id,w:w.w,ph:w.ph,pos:w.pos,g:w.g})})});
+function distractor(word,n){
+  var cand=[];
+  for(var i=0;i<ALL_WORDS.length;i++){
+    var x=ALL_WORDS[i];if(x.w===word.w)continue;
+    var s=-levenshtein(word.w,x.w);
+    if(x.w.charAt(0)===word.w.charAt(0))s+=1.5;
+    if(x.w.substr(0,2)===word.w.substr(0,2))s+=1;
+    if(word.pos&&x.pos&&word.pos.charAt(0)===x.pos.charAt(0))s+=0.5;
+    var pf=0,L=Math.min(word.w.length,x.w.length);
+    for(var k=0;k<L;k++){if(word.w.charAt(k)===x.w.charAt(k))pf++;else break}
+    s+=pf*0.8;
+    cand.push({x:x,s:s});
+  }
+  cand.sort(function(a,b){return b.s-a.s});
+  return cand.slice(0,n).map(function(o){return o.x});
+}
+
+/* ================= 进度（localStorage） ================= */
+var LS='vocab888_progress_v1';
+var PROG={};
+try{PROG=JSON.parse(localStorage.getItem(LS)||'{}')}catch(e){PROG={}}
+function save(){try{localStorage.setItem(LS,JSON.stringify(PROG))}catch(e){}}
+function pget(uid){if(!PROG[uid])PROG[uid]={t1:{ok:0,total:0},t2:{ok:0,total:0},t3:{ok:0,total:0},wrong:[],done:false};return PROG[uid]}
+function pct(uid){var p=pget(uid),tot=p.t1.total+p.t2.total+p.t3.total;if(!tot)return -1;return Math.round(100*(p.t1.ok+p.t2.ok+p.t3.ok)/tot)}
+function addWrong(uid,w){var p=pget(uid);if(p.wrong.indexOf(w)<0)p.wrong.push(w);save()}
+function removeWrong(uid,w){var p=pget(uid),i=p.wrong.indexOf(w);if(i>=0)p.wrong.splice(i,1);save()}
+
+/* ================= 视图切换 ================= */
+var curUnit=null, view='home';
+function show(v){view=v;['home','practice','review'].forEach(function(x){$('view-'+x).classList.toggle('hide',x!==v)});window.scrollTo(0,0)}
+
+/* ================= 首页 ================= */
+function renderHome(){
+  var box=$('unitList');box.innerHTML='';
+  DATA.forEach(function(u){
+    var p=pct(u.id),pstr=(p<0?'未开始':p+'%');
+    var bar=(p<0?'':('<i style="width:'+p+'%"></i>'));
+    var c=document.createElement('button');
+    c.className='u-card'+(u.theme?'':' wide');
+    c.innerHTML='<div class="un">'+esc(u.name)+'</div>'+
+      (u.theme?'<div class="th">'+esc(u.theme)+'</div>':'<div class="th">考前冲刺 8 词</div>')+
+      '<div class="meta"><span>'+u.words.length+' 词</span><span class="pct">'+pstr+'</span></div>'+
+      '<div class="pbar">'+bar+'</div>';
+    c.onclick=function(){enterUnit(u.id)};
+    box.appendChild(c);
+  });
+}
+
+/* ================= 进入单元 ================= */
+var S=null; // session
+function enterUnit(uid){
+  var u=null;for(var i=0;i<DATA.length;i++)if(DATA[i].id===uid)u=DATA[i];
+  if(!u)return;
+  curUnit=u;var p=pget(uid);
+  $('pTitle').textContent=u.name;
+  $('pTheme').textContent=u.theme?u.theme:'考前冲刺';
+  // 每题型完成标记
+  $('d1').classList.toggle('show',p.t1.total>0);
+  $('d2').classList.toggle('show',p.t2.total>0);
+  $('d3').classList.toggle('show',p.t3.total>0);
+  S={t:1,words:shuffle(u.words.slice()),t2q:shuffle(u.words.slice()),idx:0,usedHint:false,pcShuffled:null,pcUsed:[],pcState:null};
+  switchTab(1);
+  show('practice');
+}
+function switchTab(t){
+  S.t=t;S.idx=0;
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-t')===t)});
+  if(t===1)startT1();
+  else if(t===2)startT2();
+  else startT3();
+}
+
+/* ================= 题型1：英选中 ================= */
+var T1={queue:[],right:0,now:0,lock:false};
+function speakT1(){
+  var w=T1.now&&T1.now.w;
+  if(!w)return;
+  if(!('speechSynthesis' in window)){var fb=$('fbT1');if(fb){fb.classList.add('show');fb.className='fb no show';fb.textContent='当前浏览器不支持发音'};return}
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(w);
+  u.lang='en-US';u.rate=.85;
+  speechSynthesis.speak(u);
+}
+function startT1(){
+  T1={queue:shuffle(curUnit.words.slice()),right:0,now:0,lock:false,rec:[]};
+  S.idx=0;renderT1();
+}
+function renderT1(){
+  if('speechSynthesis' in window)speechSynthesis.cancel();
+  T1.lock=false;
+  if(S.idx>=T1.queue.length){finishT1();return}
+  var w=T1.queue[S.idx];T1.now=w;
+  var rec=T1.rec[S.idx]||null;
+  var dis=distractor(w,3).map(function(x){return {w:x.w,g:x.g,pos:x.pos,right:false}});
+  var opts=shuffle([{w:w.w,g:w.g,pos:w.pos,right:true}].concat(dis));
+  var letters=['A','B','C','D'];
+  var html='<div class="card"><div class="q-word">'+esc(w.w)+
+    '<button class="spk" type="button" onclick="speakT1()" title="播放发音" aria-label="播放发音"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button>'+
+    '</div><div class="q-meta">'+esc(w.ph||'')+(w.pos?'&nbsp; '+esc(w.pos):'')+'</div></div>'+
+    '<div class="opts">';
+  opts.forEach(function(o,i){
+    var cls='opt';
+    if(rec&&rec.answered){
+      cls+=' done';
+      if(o.right)cls+=' correct';
+      if(rec.selw===o.w&&!o.right)cls+=' wrong';
+    }
+    html+='<button class="'+cls+'" data-i="'+i+'" data-right="'+o.right+'" data-w="'+esc(o.w)+'"'+(rec&&rec.answered?' disabled':'')+'>'+
+      '<span class="tag">'+letters[i]+'</span><span>'+esc(o.g)+'</span></button>';
+  });
+  html+='</div>';
+  // 反馈区（已答题回看时显示该题结果）
+  if(rec&&rec.answered){
+    var fbc='fb '+(rec.right?'ok':'no')+' show';
+    var fbtxt;
+    if(rec.right)fbtxt='<span class="big">&#10003; 正确</span>　'+esc(w.g)+'<br>记一下：'+esc(w.w)+' 是「'+esc(w.g)+'」';
+    else{
+      var selLetter='';
+      for(var oi=0;oi<opts.length;oi++)if(opts[oi].w===rec.selw)selLetter=letters[oi];
+      fbtxt='<span class="big">&#10007; 你选了 '+selLetter+'：'+esc(rec.selw)+'（'+esc(rec.selg)+'）</span>'+
+        '<br>正确答案：<b>'+esc(w.w)+'（'+esc(w.g)+'）</b> · 形近辨析：'+esc(w.w)+' ≠ '+esc(rec.selw);
+    }
+    html+='<div class="'+fbc+'" id="fbT1">'+fbtxt+'</div>';
+  }else{
+    html+='<div class="fb" id="fbT1"></div>';
+  }
+  // 导航：上一题 / 下一题（答完停留，可回看背诵）
+  html+='<div class="navrow">';
+  html+='<button class="navbtn" '+(S.idx>0?'onclick="navT1(-1)"':'disabled')+'>上一题</button>';
+  if(S.idx>=T1.queue.length-1)html+='<button class="navbtn main" onclick="finishT1()">完成</button>';
+  else html+='<button class="navbtn" onclick="navT1(1)">下一题</button>';
+  html+='</div>';
+  $('stage').innerHTML=html;
+  $('progLine').innerHTML='<span>题型1 英选中</span><span>第 '+(S.idx+1)+' / '+T1.queue.length+' 题</span>';
+  var btns=$('stage').querySelectorAll('.opt');
+  for(var i=0;i<btns.length;i++)btns[i].onclick=function(){if(T1.lock)return;pickT1(this)};
+}
+function navT1(d){
+  var nx=S.idx+d;
+  if(nx<0||nx>=T1.queue.length)return;
+  S.idx=nx;renderT1();
+}
+function pickT1(btn){
+  T1.lock=true;var p=pget(curUnit.id);
+  var w=T1.now,isRight=btn.getAttribute('data-right')==='true';
+  var letters=['A','B','C','D'],i=+btn.getAttribute('data-i');
+  var selw=btn.getAttribute('data-w'),selg=btn.querySelector('span:last-child').textContent;
+  T1.rec[S.idx]={answered:true,right:isRight,sel:i,selw:selw,selg:selg};
+  if(isRight){
+    T1.right++;p.t1.ok++;p.t1.total++;save();
+  }else{
+    p.t1.total++;addWrong(curUnit.id,w.w);save();
+  }
+  renderT1();
+}
+function finishT1(){
+  var p=pget(curUnit.id);
+  $('stage').innerHTML='<div class="tally"><div class="tt">题型1 英选中 完成</div>'+
+    '<div class="row"><span>答对</span><b>'+T1.right+' / '+T1.queue.length+'</b></div>'+
+    '<div class="row"><span>累计正确率</span><b>'+(p.t1.total?Math.round(100*p.t1.ok/p.t1.total)+'%':'--')+'</b></div>'+
+    '<button class="dbtn ghost" style="margin-top:12px" onclick="startT1()">再刷一遍</button></div>';
+  $('d1').classList.add('show');
+  $('progLine').textContent='题型1 完成，可切换到下一题型';
+}
+
+/* ================= 题型2：中译英 ================= */
+var T2={queue:[],right:0,copyMode:false,copyWord:null};
+function startT2(){
+  T2={queue:shuffle(curUnit.words.slice()),right:0,copyMode:false,copyWord:null};
+  S.idx=0;nextT2();
+}
+function nextT2(){
+  if(S.idx>=T2.queue.length){finishT2();return}
+  var w=T2.queue[S.idx];T2.usedHint=false;
+  $('progLine').innerHTML='<span>题型2 中译英</span><span>第 '+(S.idx+1)+' / '+T2.queue.length+' 题</span>';
+  $('stage').innerHTML='<div class="card"><div class="q-word" style="font-size:22px">'+esc(w.pos?w.pos+'　':'')+esc(w.g)+'</div>'+
+    (w.ph?'<div class="q-meta">提示：'+(w.ph.indexOf('/')===0?w.ph:'')+'</div>':'')+
+    '<div class="inrow"><input id="in2" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入英文单词，回车提交">'+
+    '<button class="btn ghost" id="btnHint">提示</button></div>'+
+    '<div class="fb" id="fbT2"></div></div>';
+  var inp=$('in2');inp.focus();
+  $('btnHint').onclick=function(){
+    if(T2.usedHint)return;T2.usedHint=true;
+    var w=T2.queue[S.idx],mask=w.w.charAt(0);
+    for(var i=1;i<w.w.length;i++)mask+=' _';
+    $('fbT2').className='fb show';$('fbT2').innerHTML='提示：'+esc(mask)+'（'+w.w.length+' 个字母）——提示后本题答对不计入正确率';
+  };
+  inp.onkeydown=function(e){if(e.key==='Enter')submitT2()};
+}
+function submitT2(){
+  var w=T2.queue[S.idx];
+  var inp=$('in2'),val=inp.value.trim().toLowerCase();
+  if(!val)return;
+  var fb=$('fbT2');fb.classList.add('show');
+  var p=pget(curUnit.id);
+  if(T2.copyMode){
+    if(val===T2.copyWord.toLowerCase()){T2.copyMode=false;fb.className='fb ok show';fb.innerHTML='<span class="big">&#10003; 记住了！</span>继续下一题';S.idx++;setTimeout(nextT2,900)}
+    else{fb.className='fb no show';fb.innerHTML='再对照抄写一遍正确答案：<b>'+esc(T2.copyWord)+'</b>'}
+    inp.value='';inp.focus();return;
+  }
+  if(val===w.w.toLowerCase()){
+    T2.right++;
+    if(!T2.usedHint){p.t2.ok++;p.t2.total++}
+    save();
+    fb.className='fb ok show';fb.innerHTML='<span class="big">&#10003; 正确</span>　'+esc(w.w)+' '+esc(w.ph||'')+' · '+esc(w.g);
+    S.idx++;setTimeout(nextT2,1100);
+  }else{
+    p.t2.total++;addWrong(curUnit.id,w.w);save();
+    T2.copyMode=true;T2.copyWord=w.w;
+    fb.className='fb no show';
+    fb.innerHTML='<span class="big">&#10007; 不对</span>　正确答案是 <b>'+esc(w.w)+'</b>（'+esc(w.g)+'）<br>请把正确答案<b>抄写一遍</b>后按回车，强化记忆';
+    inp.value='';inp.focus();
+  }
+}
+function finishT2(){
+  var p=pget(curUnit.id);
+  $('stage').innerHTML='<div class="tally"><div class="tt">题型2 中译英 完成</div>'+
+    '<div class="row"><span>答对</span><b>'+T2.right+' / '+T2.queue.length+'</b></div>'+
+    '<div class="row"><span>累计正确率</span><b>'+(p.t2.total?Math.round(100*p.t2.ok/p.t2.total)+'%':'--')+'</b></div>'+
+    '<button class="dbtn ghost" style="margin-top:12px" onclick="startT2()">再刷一遍</button></div>';
+  $('d2').classList.add('show');
+  $('progLine').textContent='题型2 完成，可切换到下一题型';
+}
+
+/* ================= 题型3：选词填空 ================= */
+var T3={slots:[],score:0,pool:[]};
+/* ================= 题型3：选词填空（支持适当形式） ================= */
+function rootMatch(w,a){
+  w=String(w).toLowerCase();a=String(a).toLowerCase();
+  if(w===a)return true;
+  if(a===w+'s'||a===w+'es'||a===w+'d'||a===w+'ed'||a===w+'ing')return true;
+  if(w.length>1&&w.slice(-1)==='y'&&a===w.slice(0,-1)+'ies')return true;
+  if(w.slice(-1)==='e'&&(a===w+'d'||a===w.slice(0,-1)+'ing'||a===w.slice(0,-1)+'s'))return true;
+  if(w.length>=3&&'bcdfghjklmnpqrstvwxyz'.indexOf(w.slice(-1))>=0&&a===w+w.slice(-1)+'ed')return true;
+  if(w.length>=3&&'bcdfghjklmnpqrstvwxyz'.indexOf(w.slice(-1))>=0&&a===w+w.slice(-1)+'ing')return true;
+  return false;
+}
+function findOrig(ans,ws){
+  for(var i=0;i<ws.length;i++)if(rootMatch(ws[i],ans))return ws[i];
+  return ans;
+}
+var T3={slots:[],score:0,pool:[],active:-1,edit:-1};
+function startT3(){
+  var u=curUnit,pc=u.pc;
+  if(!pc.ws.length){$('stage').innerHTML='<div class="empty">本单元暂无选词填空数据</div>';$('progLine').textContent='';return}
+  var pool=shuffle(pc.ws.slice());
+  var slots=[];
+  for(var i=0;i<pc.it.length;i++)slots.push({word:null,ans:pc.an[i],orig:findOrig(pc.an[i],pc.ws),state:'empty',hint:''});
+  T3={slots:slots,score:0,pool:pool,active:-1,edit:-1};
+  renderT3();
+}
+function renderT3(){
+  var u=curUnit,pc=u.pc,html='';
+  html+='<div class="pool" id="pool">';
+  T3.pool.forEach(function(w,i){
+    html+='<button class="chip" data-i="'+i+'" data-w="'+esc(w)+'">'+esc(w)+'</button>';
+  });
+  html+='</div>';
+  html+='<div class="t3score" id="t3s"></div>';
+  pc.it.forEach(function(sent,si){
+    var s=T3.slots[si];
+    html+='<div class="sent">'+(si+1)+'. ';
+    var parts=sent.split('___');
+    parts.forEach(function(seg,pi){
+      html+=esc(seg);
+      if(pi<parts.length-1){
+        var cls='slot';
+        if(s.state==='good')cls+=' good';else if(s.state==='bad'||s.state==='form')cls+=' bad';else if(s.word)cls+=' filled';
+        if(T3.active===si)cls+=' active';
+        var slotTxt;
+        if(T3.edit===si){
+          cls+=' edit';
+          slotTxt='<input class="sin" data-si="'+si+'" value="'+esc(s.word||'')+'" autocomplete="off" autocapitalize="off" spellcheck="false">';
+        }else if(s.state==='good')slotTxt=esc(s.word)+' <span class="ok-mark">&#10003;</span>';
+        else if(s.state==='bad'||s.state==='form')slotTxt=esc(s.ans)+' <span class="no-mark">&#10007;</span>';
+        else slotTxt=s.word?esc(s.word):'点此选词';
+        html+='<span class="'+cls+'" data-si="'+si+'">'+slotTxt+'</span>';
+        if(s.state==='form'&&s.hint)html+=' <span class="form-hint">'+s.hint+'</span>';
+      }
+    });
+    html+='</div>';
+  });
+  $('stage').innerHTML=html;
+  $('progLine').innerHTML='<span>题型3 选词填空</span><span>已填 '+filledCount()+' / 10</span>';
+  document.querySelectorAll('#pool .chip').forEach(function(c){c.onclick=function(){pickChip(+c.getAttribute('data-i'))}});
+  document.querySelectorAll('.slot').forEach(function(sl){sl.onclick=function(){clickSlot(+sl.getAttribute('data-si'))}});
+  if(T3.edit>=0){
+    var inp=document.querySelector('.sin');
+    if(inp){inp.focus();inp.select();inp.onkeydown=function(e){if(e.key==='Enter')submitSlot(T3.edit);if(e.key==='Escape'){T3.edit=-1;renderT3()}}}
+  }
+  if(T3.score>0)$('t3s').textContent='本题得分：'+T3.score+' / 10';
+}
+function filledCount(){var n=0;T3.slots.forEach(function(s){if(s.word)n++});return n}
+function pickChip(i){
+  var w=T3.pool[i];
+  var si=-1;
+  if(T3.active>=0&&!T3.slots[T3.active].word)si=T3.active;
+  else{for(var k=0;k<T3.slots.length;k++)if(!T3.slots[k].word){si=k;break}}
+  if(si<0)return;
+  T3.slots[si].word=w;
+  T3.pool.splice(i,1);
+  T3.active=-1;
+  checkSlot(si);
+}
+function clickSlot(si){
+  var s=T3.slots[si];
+  if(T3.edit===si){T3.edit=-1;renderT3();return}
+  if(s.state==='form'){ // 形式不对：点击进入编辑，改成适当形式
+    T3.edit=si;renderT3();return;
+  }
+  if(s.state==='good'||s.state==='bad'){ // 已判定：点击取出重填
+    T3.pool.push(s.word);T3.slots[si].word=null;s.state='empty';s.hint='';T3.edit=-1;renderT3();return;
+  }
+  if(s.word){ // 已填未判：点击进入编辑
+    T3.edit=(T3.edit===si?-1:si);renderT3();return;
+  }
+  T3.active=(T3.active===si?-1:si);renderT3();
+}
+function submitSlot(si){
+  var s=T3.slots[si],inp=document.querySelector('.sin');
+  var val=inp?inp.value.trim():'';
+  if(!val){ // 清空回车 = 取出重填
+    T3.pool.push(s.word);T3.slots[si].word=null;s.state='empty';s.hint='';T3.edit=-1;renderT3();return;
+  }
+  s.word=val;T3.edit=-1;checkSlot(si);
+}
+function checkSlot(si){
+  var s=T3.slots[si],p=pget(curUnit.id);
+  var val=s.word.toLowerCase(),ans=s.ans.toLowerCase(),orig=s.orig.toLowerCase();
+  if(val===ans){s.state='good';p.t3.ok++;T3.score++;s.hint=''}
+  else if(val===orig&&orig!==ans){
+    s.state='form';s.hint='注意形式：'+esc(s.orig)+' → '+esc(s.ans);
+    addWrong(curUnit.id,s.orig);
+  }
+  else{
+    s.state='bad';s.hint='';
+    addWrong(curUnit.id,s.orig);
+  }
+  p.t3.total++;save();
+  renderT3();
+  if(filledCount()===T3.slots.length)setTimeout(finishT3,600);
+}
+function finishT3(){
+  var p=pget(curUnit.id);
+  $('stage').innerHTML='<div class="tally"><div class="tt">题型3 选词填空 完成</div>'+
+    '<div class="row"><span>本题得分</span><b>'+T3.score+' / 10</b></div>'+
+    '<div class="row"><span>累计正确率</span><b>'+(p.t3.total?Math.round(100*p.t3.ok/p.t3.total)+'%':'--')+'</b></div>'+
+    '<button class="dbtn ghost" style="margin-top:12px" onclick="startT3()">再刷一遍</button></div>';
+  $('d3').classList.add('show');
+  $('progLine').textContent='题型3 完成';
+  // 三题型齐了，弹总结
+  var done=p.t1.total>0&&p.t2.total>0&&p.t3.total>0;
+  if(done&&!p.done){p.done=true;save();showSum()}
+}
+
+/* ================= 总结 ================= */
+function showSum(){
+  var p=pget(curUnit.id);
+  $('sumTitle').textContent=curUnit.name+' 总结';
+  $('sumBody').innerHTML=
+    '<div class="row"><span>题型1 英选中</span><b>'+p.t1.ok+' / '+p.t1.total+'</b></div>'+
+    '<div class="row"><span>题型2 中译英</span><b>'+p.t2.ok+' / '+p.t2.total+'</b></div>'+
+    '<div class="row"><span>题型3 选词填空</span><b>'+p.t3.ok+' / '+p.t3.total+'</b></div>'+
+    '<div class="row"><span>掌握率</span><b class="big">'+pct(curUnit.id)+'%</b></div>'+
+    '<div class="row"><span>错词数</span><b>'+(p.wrong.length?p.wrong.length+' 个':'0，太稳了')+'</b></div>';
+  $('maskSum').classList.add('show');
+}
+$('btnRerunWrong').onclick=function(){$('maskSum').classList.remove('show');openReview()};
+$('btnSumHome').onclick=function(){$('maskSum').classList.remove('show');renderHome();show('home')};
+
+/* ================= 错词回顾 ================= */
+function openReview(){
+  var p=pget(curUnit.id);
+  $('rTitle').textContent=curUnit.name+' · 错词回顾';
+  var box=$('reviewBox');
+  if(!p.wrong.length){
+    box.innerHTML='<div class="empty">本单元没有错词，继续保持</div>';
+    return;
+  }
+  var html='<div class="wlist"><div class="wt">错词本（'+p.wrong.length+' 个）</div>';
+  p.wrong.forEach(function(w){
+    var g='';
+    for(var i=0;i<ALL_WORDS.length;i++)if(ALL_WORDS[i].w===w&&ALL_WORDS[i].u===curUnit.id){g=ALL_WORDS[i].g;break}
+    html+='<div class="wrow"><span class="w">'+esc(w)+'</span><span class="g">'+esc(g)+'</span></div>';
+  });
+  html+='</div><button class="btn" style="width:100%" id="btnRewrong">一键重刷错词（'+p.wrong.length+' 个）</button>';
+  box.innerHTML=html;
+  $('btnRewrong').onclick=startWrongQuiz;
+  show('review');
+}
+function startWrongQuiz(){
+  var p=pget(curUnit.id),wl=p.wrong.slice();
+  if(!wl.length)return;
+  // 在 review 页渲染题型1模式
+  S={t:1,idx:0};
+  T1={queue:wl.map(function(w){
+    for(var i=0;i<ALL_WORDS.length;i++)if(ALL_WORDS[i].w===w&&ALL_WORDS[i].u===curUnit.id)return ALL_WORDS[i];
+    return {w:w,ph:'',pos:'',g:''};
+  }),right:0,now:null,lock:false};
+  $('progLine').innerHTML='<span>错词重刷（英选中）</span><span>第 1 / '+wl.length+' 题</span>';
+  renderWrongQ();
+}
+function renderWrongQ(){
+  var p=pget(curUnit.id);
+  if(S.idx>=T1.queue.length){ // 结束
+    $('reviewBox').innerHTML='<div class="tally"><div class="tt">错词重刷完成</div>'+
+      '<div class="row"><span>剩余错词</span><b>'+(p.wrong.length?p.wrong.length+' 个':'0 个，全部拿下')+'</b></div>'+
+      '<button class="dbtn ghost" style="margin-top:12px" onclick="openReview()">查看错词本</button>'+
+      '<button class="dbtn main" style="margin-top:8px" onclick="renderHome();show(\'home\')">返回首页</button></div>';
+    $('progLine').textContent='重刷完成，做对的已移出错词本';
+    return;
+  }
+  var w=T1.queue[S.idx];T1.now=w;
+  var dis=distractor(w,3).map(function(x){return {w:x.w,g:x.g,pos:x.pos,right:false}});
+  var opts=shuffle([{w:w.w,g:w.g,pos:w.pos,right:true}].concat(dis));
+  var letters=['A','B','C','D'];
+  var html='<div class="card"><div class="q-word">'+esc(w.w)+'</div>'+
+    '<div class="q-meta">'+esc(w.ph||'')+(w.pos?'&nbsp; '+esc(w.pos):'')+'</div></div><div class="opts">';
+  opts.forEach(function(o,i){html+='<button class="opt" data-i="'+i+'" data-right="'+o.right+'"><span class="tag">'+letters[i]+'</span><span>'+esc(o.g)+'</span></button>'});
+  html+='</div><div class="fb" id="fbRW"></div>';
+  $('reviewBox').innerHTML=html;
+  $('progLine').innerHTML='<span>错词重刷（英选中）</span><span>第 '+(S.idx+1)+' / '+T1.queue.length+' 题</span>';
+  var btns=$('reviewBox').querySelectorAll('.opt');
+  for(var i=0;i<btns.length;i++)btns[i].onclick=function(){if(T1.lock)return;pickWrong(this)};
+}
+function pickWrong(btn){
+  T1.lock=true;var p=pget(curUnit.id),w=T1.now;
+  var isRight=btn.getAttribute('data-right')==='true';
+  var letters=['A','B','C','D'],si=+btn.getAttribute('data-i');
+  var opts=$('reviewBox').querySelectorAll('.opt');
+  for(var k=0;k<opts.length;k++){var rb=opts[k].getAttribute('data-right')==='true';opts[k].disabled=true;if(rb)opts[k].classList.add('correct')}
+  var fb=$('fbRW');fb.classList.add('show');
+  if(isRight){
+    btn.classList.add('correct');
+    removeWrong(curUnit.id,w.w);
+    p.t1.ok++;p.t1.total++;save();
+    fb.className='fb ok show';fb.innerHTML='<span class="big">&#10003; 正确</span>　'+esc(w.g)+'（已移出错词本）';
+    setTimeout(function(){T1.lock=false;S.idx++;renderWrongQ()},1000);
+  }else{
+    btn.classList.add('wrong');
+    p.t1.total++;save();
+    fb.className='fb no show';
+    fb.innerHTML='<span class="big">&#10007; 还差一点</span>　'+esc(w.w)+' 是「'+esc(w.g)+'」，下次再战';
+    setTimeout(function(){T1.lock=false;S.idx++;renderWrongQ()},1600);
+  }
+}
+
+/* ================= 事件绑定 ================= */
+$('btnBack').onclick=function(){renderHome();show('home')};
+$('btnRBack').onclick=function(){renderHome();show('home')};
+document.querySelectorAll('.tab').forEach(function(b){
+  b.onclick=function(){if(curUnit)switchTab(+b.getAttribute('data-t'))};
+});
+$('maskSum').onclick=function(e){if(e.target===$('maskSum'))$('maskSum').classList.remove('show')};
+
+renderHome();
+</script>
+</body>
+</html>
